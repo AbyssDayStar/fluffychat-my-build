@@ -1,0 +1,46 @@
+name: Build Windows Release
+
+on:
+  release:
+    types:
+      - created
+  workflow_dispatch:
+
+jobs:
+  build_windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version-file: .tool_versions.yaml
+          cache: true
+
+      - name: Install Rust
+        uses: moonrepo/setup-rust@v1
+        with:
+          channel: stable
+          components: rust-src
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Windows release (x64)
+        run: flutter build windows --release
+
+      - name: Archive build
+        run: |
+          Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath fluffychat-windows.zip
+          
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fluffychat-windows
+          path: fluffychat-windows.zip
