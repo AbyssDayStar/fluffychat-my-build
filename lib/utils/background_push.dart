@@ -111,6 +111,11 @@ class BackgroundPush {
         settings: const InitializationSettings(
           android: AndroidInitializationSettings('notifications_icon'),
           iOS: DarwinInitializationSettings(),
+          windows: WindowsInitializationSettings(
+            appName: 'FluffyChat',  
+            appUserModelId: 'com.krille-chan.fluffychat',  
+            guid: '5d6ff7eb-a600-4f2a-8ba8-39228eb0ca13',  
+          ),
         ),
         onDidReceiveNotificationResponse: (response) => notificationTap(
           response,
