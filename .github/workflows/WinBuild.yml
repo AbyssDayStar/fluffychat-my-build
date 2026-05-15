@@ -1,9 +1,9 @@
 name: Build Windows Release
 
 on:
-  release:
-    types:
-      - created
+    push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -34,10 +34,6 @@ jobs:
 
       - name: Build Windows release (x64)
         run: flutter build windows --release
-
-      - name: Archive build
-        run: |
-          Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath fluffychat-windows.zip
           
       - name: Upload artifact
         uses: actions/upload-artifact@v4
