@@ -1,7 +1,7 @@
 name: Build Windows Release
 
 on:
-    push:
+  push:
     branches:
       - main
   workflow_dispatch:
@@ -12,13 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          submodules: recursive
+            submodules: recursive
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version-file: .tool_versions.yaml
-          cache: true
+            flutter-version-file: .tool_versions.yaml
+            cache: true
 
       - name: Install Rust
         uses: moonrepo/setup-rust@v1
@@ -34,9 +34,9 @@ jobs:
 
       - name: Build Windows release (x64)
         run: flutter build windows --release
-          
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: fluffychat-windows
-          path: fluffychat-windows.zip
+            name: fluffychat-windows
+            path: build/windows/x64/runner/Release/  
