@@ -2196,7 +2196,6 @@
     "passwordRecoverySettings": "Wachtwoordherstel-instellingen",
     "knock": "Klop",
     "overview": "Overzicht",
-    "hidePresences": "Verberg statuslijst?",
     "noOneCanJoin": "Niemand kan deelnemen",
     "yourGlobalUserIdIs": "Je Matrix-ID is: ",
     "appLockDescription": "Vergendel de app wanneer het niet gebruikt wordt met een pincode",
@@ -2317,11 +2316,6 @@
                 "type": "int"
             }
         }
-    },
-    "presencesToggle": "Statusberichten van andere personen tonen",
-    "@presencesToggle": {
-        "type": "String",
-        "placeholders": {}
     },
     "website": "Website",
     "usersMustKnock": "Personen moeten kloppen",
@@ -2728,7 +2722,6 @@
     "createNewAccount": "Registreer nieuw account",
     "signUpGreeting": "FluffyChat is decentraal! Kies een server waar je wil voor jouw account en laten we gaan!",
     "signInGreeting": "Heb je al een Matrix account? Welkom terug! Kies jouw server en log in.",
-    "appIntro": "Met FluffyChat kan je chatten met je vrienden. Het is een veilige en decentrale [matrix] app! Lees meer op https://matrix.org als je wilt of kies registreren.",
     "theProcessWasCanceled": "Het proces is geannuleerd.",
     "join": "Deelnemen",
     "searchOrEnterHomeserverAddress": "Zoek of voer serveradres in",
@@ -2751,14 +2744,6 @@
     "support": "Steunen",
     "setLowPriority": "Lage prioriteit instellen",
     "unsetLowPriority": "Lage prioriteit uitschakelen",
-    "removeCallFromChat": "Verwijder oproep van chat",
-    "removeCallFromChatDescription": "Wil je de oproep voor iedereen in de chat verwijderen?",
-    "removeCallForEveryone": "Verwijder oproep voor iedereen",
-    "live": "Live",
-    "startVoiceCall": "Start audio-gesprek",
-    "startVideoCall": "Start video-gesprek",
-    "joinVoiceCall": "Audio-gesprek opnemen",
-    "joinVideoCall": "Deelnemen aan video-gesprek",
     "playSoundOnNotification": "Meldingsgeluid afspelen",
     "addTag": "Tag toevoegen",
     "removeTag": "Tag verwijderen",

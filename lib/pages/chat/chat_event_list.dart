@@ -7,6 +7,7 @@ import 'package:collection/collection.dart';
 import 'package:fluffychat/config/themes.dart';
 import 'package:fluffychat/l10n/l10n.dart';
 import 'package:fluffychat/pages/chat/chat.dart';
+import 'package:fluffychat/pages/chat/encrpytion_info.dart';
 import 'package:fluffychat/pages/chat/events/message.dart';
 import 'package:fluffychat/pages/chat/seen_by_row.dart';
 import 'package:fluffychat/pages/chat/typing_indicators.dart';
@@ -52,8 +53,11 @@ class ChatEventList extends StatelessWidget {
     return SelectionArea(
       child: ListView.custom(
         padding: EdgeInsets.only(
-          top: 16,
-          bottom: 8,
+          top: 8 + MediaQuery.paddingOf(context).top,
+          bottom:
+              8 +
+              (controller.inputBarHeight ??
+                  (72 + (FluffyThemes.isColumnMode(context) ? 16 : 0))),
           left: horizontalPadding,
           right: horizontalPadding,
         ),
@@ -84,6 +88,7 @@ class ChatEventList extends StatelessWidget {
                 children: [
                   if (events.isNotEmpty) SeenByRow(event: events.first),
                   TypingIndicators(controller),
+                  EncryptionInfo(room: controller.room),
                 ],
               );
             }

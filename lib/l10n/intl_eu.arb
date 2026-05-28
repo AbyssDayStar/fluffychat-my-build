@@ -2302,13 +2302,7 @@
             }
         }
     },
-    "presencesToggle": "Erakutsi beste erabiltzaileen egoera-mezuak",
-    "@presencesToggle": {
-        "type": "String",
-        "placeholders": {}
-    },
     "incomingMessages": "Jasotako mezuak",
-    "hidePresences": "Ezkutatu Egoeren Zerrenda?",
     "discover": "Arakatu",
     "stickers": "Pegatinak",
     "commandHint_unignore": "Utzi Matrix ID honi muzin egiteari",
@@ -2729,7 +2723,6 @@
     "createNewAccount": "Sortu kontu berria",
     "signUpGreeting": "FluffyChat deszentralizatua da! Hautatu zure kontua zein zerbitzaritan sortu nahi duzun, eta hasi erabiltzen!",
     "signInGreeting": "Baduzu dagoeneko Matrix kontu bat? Ongi etorri berriro ere! Hautatu zure zerbitzaria eta hasi saioa.",
-    "appIntro": "FluffyChat-i esker lagunekin txateatu dezakezu. [matrix]-erako mezularitza programa seguru eta deszentralizatua da! Nahi baduzu, irakurri gehiago https://matrix.org gunean, edo hasi saioa.",
     "theProcessWasCanceled": "Eragiketa bertan behera utzi da.",
     "join": "Batu",
     "searchOrEnterHomeserverAddress": "Bilatu edo sartu zerbitzariaren helbidea",
@@ -2752,13 +2745,5 @@
     "support": "Lagundu",
     "setLowPriority": "Ezarri lehentasun baxua",
     "unsetLowPriority": "Kendu lehentasun baxua",
-    "removeCallFromChat": "Kendu deia txatetik",
-    "removeCallFromChatDescription": "Kide guztientzat kendu nahi al duzu deia txatetik?",
-    "removeCallForEveryone": "Kendu deia guztientzat",
-    "startVoiceCall": "Hasi ahots-deia",
-    "startVideoCall": "Hasi bideo-deia",
-    "joinVoiceCall": "Batu ahots-deira",
-    "joinVideoCall": "Batu bideo-deira",
-    "live": "Zuzenean",
     "playSoundOnNotification": "Jo soinua jakinarazpenekin"
 }

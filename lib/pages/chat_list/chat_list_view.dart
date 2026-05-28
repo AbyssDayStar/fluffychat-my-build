@@ -57,19 +57,21 @@ class ChatListView extends StatelessWidget {
                 backgroundColor: oneColumnSpacesMode
                     ? Theme.of(context).colorScheme.surfaceContainer
                     : null,
-                body: SafeArea(
-                  child: Material(
-                    clipBehavior: Clip.hardEdge,
-                    borderRadius: BorderRadius.circular(AppConfig.borderRadius),
-                    color: Theme.of(context).colorScheme.surface,
-                    child: ChatListViewBody(controller),
-                  ),
+                body: Material(
+                  clipBehavior: Clip.hardEdge,
+                  borderRadius: BorderRadius.circular(AppConfig.borderRadius),
+                  color: Theme.of(context).colorScheme.surface,
+                  child: ChatListViewBody(controller),
                 ),
                 floatingActionButton:
                     !controller.isSearchMode &&
                         controller.activeSpaceId == null &&
                         !FluffyThemes.isColumnMode(context)
-                    ? StartChatFab()
+                    ? ValueListenableBuilder(
+                        valueListenable: controller.scrolledToTop,
+                        builder: (context, scrolledToTop, _) =>
+                            StartChatFab(extended: scrolledToTop),
+                      )
                     : const SizedBox.shrink(),
               ),
             ),
