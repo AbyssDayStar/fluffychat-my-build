@@ -38,7 +38,9 @@ class IntroPage extends StatelessWidget {
     return LoginScaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: addMultiAccount ? Text(L10n.of(context).addAccount) : null,
+        title: addMultiAccount
+            ? Text(L10n.of(context).addAccount)
+            : Text(AppSettings.applicationName.value),
         actions: [
           PopupMenuButton(
             useRootNavigator: true,
@@ -103,37 +105,30 @@ class IntroPage extends StatelessWidget {
                         children: [
                           Container(
                             alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0,
-                            ),
+                            padding: const EdgeInsets.all(32.0),
                             child: Hero(
                               tag: 'info-logo',
-                              child: Image.asset(
-                                './assets/logo/mini/logo_favicon_mini.png',
-                                width: 156,
-                                height: 156,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(128),
+                                child: Image.asset(
+                                  './assets/logo/mini/logo_mini.png',
+                                  width: 128,
+                                  height: 128,
+                                ),
                               ),
                             ),
                           ),
-                          Center(
-                            child: Image.asset(
-                              './assets/logo/mini/logo_font_mini.png',
-                              width: 156,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
                           Text(
                             L10n.of(context).appSubtitle,
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(fontSize: 20),
                           ),
                           const SizedBox(height: 8),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 32),
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
                             child: Text(
                               L10n.of(context).appDescription,
                               textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 12),
                             ),
                           ),
                           const Spacer(),

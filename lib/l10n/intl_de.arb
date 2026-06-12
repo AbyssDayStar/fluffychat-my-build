@@ -363,11 +363,6 @@
         "type": "String",
         "placeholders": {}
     },
-    "chatBackupDescription": "Deine Nachrichten sind mit einem Wiederherstellungsschlüssel gesichert. Bitte stelle sicher, dass du ihn nicht verlierst.",
-    "@chatBackupDescription": {
-        "type": "String",
-        "placeholders": {}
-    },
     "chatDetails": "Chatdetails",
     "@chatDetails": {
         "type": "String",
@@ -734,11 +729,6 @@
                 "type": "String"
             }
         }
-    },
-    "everythingReady": "Alles fertig!",
-    "@everythingReady": {
-        "type": "String",
-        "placeholders": {}
     },
     "fileName": "Dateiname",
     "@fileName": {
@@ -1606,11 +1596,6 @@
         "type": "String",
         "placeholders": {}
     },
-    "transferFromAnotherDevice": "Von anderem Gerät übertragen",
-    "@transferFromAnotherDevice": {
-        "type": "String",
-        "placeholders": {}
-    },
     "tryToSendAgain": "Noch mal versuchen zu senden",
     "@tryToSendAgain": {
         "type": "String",
@@ -1816,11 +1801,6 @@
         "type": "String",
         "placeholders": {}
     },
-    "wipeChatBackup": "Den Chat-Backup löschen, um einen neuen Wiederherstellungsschlüssel zu erstellen?",
-    "@wipeChatBackup": {
-        "type": "String",
-        "placeholders": {}
-    },
     "withTheseAddressesRecoveryDescription": "Mit diesen Adressen kannst du dein Passwort wiederherstellen, wenn du es vergessen hast.",
     "@withTheseAddressesRecoveryDescription": {
         "type": "String",
@@ -1885,7 +1865,6 @@
     "homeserver": "Homeserver",
     "sendOnEnter": "Senden mit Enter",
     "link": "Link",
-    "yourChatBackupHasBeenSetUp": "Dein Chat-Backup wurde eingerichtet.",
     "unverified": "Unverifiziert",
     "messageInfo": "Nachrichten-Info",
     "time": "Zeit",
@@ -1999,7 +1978,6 @@
         }
     },
     "recoveryKey": "Wiederherstellungs-Schlüssel",
-    "recoveryKeyLost": "Wiederherstellungsschlüssel verloren?",
     "user": "Benutzer",
     "custom": "Benutzerdefiniert",
     "storeInAndroidKeystore": "Im Android KeyStore speichern",
@@ -2007,9 +1985,6 @@
     "dehydrate": "Sitzung exportieren und Gerät löschen",
     "dehydrateWarning": "Diese Aktion kann nicht rückgängig gemacht werden. Stelle sicher, dass du die Sicherungsdatei sicher aufbewahrst.",
     "hydrate": "Aus Sicherungsdatei wiederherstellen",
-    "unlockOldMessages": "Entsperre alte Nachrichten",
-    "pleaseEnterRecoveryKeyDescription": "Um deine alten Nachrichten zu entsperren, gib bitte den Wiederherstellungsschlüssel ein, der in einer früheren Sitzung generiert wurde. Dein Wiederherstellungsschlüssel ist NICHT dein Passwort.",
-    "saveKeyManuallyDescription": "Speicher diesen Schlüssel manuell, indem du den Systemfreigabedialog oder die Zwischenablage auslöst.",
     "countFiles": "{count} Dateien",
     "@countFiles": {
         "placeholders": {
@@ -2019,7 +1994,6 @@
         }
     },
     "users": "Benutzer",
-    "storeInSecureStorageDescription": "Speicher den Wiederherstellungsschlüssel im sicheren Speicher dieses Geräts.",
     "storeInAppleKeyChain": "Im Apple KeyChain speichern",
     "confirmMatrixId": "Bitte bestätigen deine Matrix-ID, um dein Konto zu löschen.",
     "supposedMxid": "das sollte sein {mxid}",
@@ -2514,7 +2488,7 @@
         }
     },
     "appWantsToUseForLoginDescription": "Hiermit erlaubst du der App und der Website, Informationen über dich weiterzugeben.",
-    "open": "Offen",
+    "open": "Öffnen",
     "notificationRuleContainsUserName": "Enthält Benutzernamen",
     "notificationRuleContainsUserNameDescription": "Benachrichtigt den Benutzer, wenn eine Nachricht seinen Benutzernamen enthält.",
     "notificationRuleMaster": "Alle Benachrichtigungen stummschalten",
@@ -2692,8 +2666,6 @@
     "saveChanges": "Änderungen speichern",
     "skipChatBackup": "Chatsicherung überspringen",
     "skipChatBackupWarning": "Bist du sicher? Ohne die Chatsicherung zu aktivieren, kannst du den Zugriff auf deine Nachrichten verlieren, wenn du dein Gerät wechselst.",
-    "loadingMessages": "Nachrichten werden geladen",
-    "setupChatBackup": "Chatsicherung einrichten",
     "createSticker": "Sticker oder Emoji erstellen",
     "useAsSticker": "Als Sticker verwenden",
     "useAsEmoji": "Als Emoji verwenden",
@@ -2751,12 +2723,48 @@
     "createNewChat": "Neuen Chat erstellen",
     "supportFluffyChat": "FluffyChat unterstützen",
     "support": "Unterstützen",
-    "createNewTag": "",
+    "createNewTag": "Neuen tag erstellen",
     "tagName": "",
-    "addTag": "",
-    "playSoundOnNotification": "",
-    "unsetLowPriority": "",
-    "setLowPriority": "",
-    "removeTag": "",
-    "appDescription": "Schreibe mir anderen mithilfe des dezentralisierten [matrix] Netzwerks auf eine einfache und zugängliche Art für jeden."
+    "addTag": "Tag hinzufügen",
+    "playSoundOnNotification": "Ton bei Benachrichtigung abspielen",
+    "unsetLowPriority": "Niedrige Priorität aufheben",
+    "setLowPriority": "Niedrige Priorität festlegen",
+    "removeTag": "Tag entfernen",
+    "appDescription": "Kommuniziere verschlüsselt über das dezentrale [matrix]-Netzwerk, so dass es einfach und zugänglich für jeden ist.",
+    "discardEdits": "Du hast ungespeicherte Änderungen. Möchtest du deine Änderungen verwerfen?",
+    "@discardEdits": {
+        "type": "String",
+        "placeholders": {}
+    },
+    "showMore": "Mehr anzeigen",
+    "showLess": "Weniger anzeigen",
+    "hideRoomsInSpaces": "Räume ausblenden, die sich in einem space befinden",
+    "possibleByYou": "Diese Veröffentlichung war nur dank eurer Unterstützung möglich. FluffyChat bleibt kostenlos, Open-Source und vollständig von der Community getragen.",
+    "showThumbnailsInTimeline": "Thumbnails von Bildern und Videos anzeigen",
+    "appSubtitle": "Sichere [matrix]-Kommunikation",
+    "interactiveVerification": "Interaktive Überprüfung",
+    "interactiveVerificationDescription": "Wenn ihr euch nebeneinander befindet oder über einen sicheren Kanal kommuniziert, könnt ihr alle Geräte gleichzeitig verifizieren, indem ihr eine Sicherheitsnummer oder Emojis vergleicht.",
+    "countUnverifiedDevices": "{count} unbestätigte Geräte im Chat.",
+    "@countUnverifiedDevices": {
+        "type": "int",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "check": "Überprüfen",
+    "encryptedMessage": "Verschlüsselte Nachricht",
+    "unencryptedMessage": "Unverschlüsselte Nachricht",
+    "allow": "Erlauben",
+    "publicKey": "Öffentlicher Schlüssel: {key}",
+    "@publicKey": {
+        "type": "String",
+        "placeholders": {
+            "key": {
+                "type": "String"
+            }
+        }
+    },
+    "deviceIdentityKey": "Geräteidentitätsschlüssel"
 }
