@@ -1,10 +1,6 @@
 {
     "@@locale": "en",
     "@@last_modified": "2021-08-14 12:38:37.885451",
-    "alwaysUse24HourFormat": "false",
-    "@alwaysUse24HourFormat": {
-        "description": "Set to true to always display time of day in 24 hour format."
-    },
     "repeatPassword": "Repeat password",
     "notAnImage": "Not an image file.",
     "ignoreUser": "Ignore user",
@@ -1350,7 +1346,6 @@
         "type": "String",
         "placeholders": {}
     },
-    "overview": "Overview",
     "passwordRecoverySettings": "Password recovery settings",
     "passwordRecovery": "Password recovery",
     "@passwordRecovery": {
@@ -2885,5 +2880,13 @@
         "type": "String",
         "placeholders": {}
     },
-    "messageNotDecryptable": "Message not decryptable"
+    "messageNotDecryptable": "Message not decryptable",
+    "today": "Today",
+    "sending": "Sending",
+    "generatingThumbnail": "Generating thumbnail",
+    "encrypting": "Encrypting",
+    "uploading": "Uploading",
+    "edited": "(edited)",
+    "couldNotBeSent": "Could not be sent",
+    "yesterday": "Yesterday"
 }

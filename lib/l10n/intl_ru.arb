@@ -2275,7 +2275,6 @@
     "hideRedactedMessages": "Скрыть редактированные сообщения",
     "hideInvalidOrUnknownMessageFormats": "Скрыть неправильные или неизвестные форматы сообщения",
     "hideRedactedMessagesBody": "Если кто-то редактирует сообщение, оно будет скрыто в чате.",
-    "overview": "Обзор",
     "passwordRecoverySettings": "Настройки восстановления пароля",
     "knock": "Постучаться",
     "usersMustKnock": "Пользователи должны постучаться",
@@ -2370,10 +2369,6 @@
     },
     "doesNotSeemToBeAValidHomeserver": "Этот домашний сервер выглядит несовместимым. Нет ли в ссылке опечаток?",
     "noMoreChatsFound": "Больше чатов не обнаружено...",
-    "alwaysUse24HourFormat": "true",
-    "@alwaysUse24HourFormat": {
-        "description": "Set to true to always display time of day in 24 hour format."
-    },
     "compressVideo": "Сжатие видео...",
     "oneOfYourDevicesIsNotVerified": "Одно из ваших устройств не подтверждено",
     "chatPermissionsDescription": "Задайте уровень власти, необходимый для совершения определённых действий в этом чате. Уровни власти 0, 50 и 100 обычно означают пользователей, модераторов и администраторов соответственно, но любая градация также возможна.",

@@ -2130,15 +2130,10 @@
     "hideRedactedMessagesBody": "Pokud někdo zprávu zrediguje, nebude tato zpráva v chatu již viditelná.",
     "hideInvalidOrUnknownMessageFormats": "Skrýt nesprávné nebo neznámé formáty zpráv",
     "blockUsername": "Ignorovat uživatelské jméno",
-    "overview": "Přehled",
     "passwordRecoverySettings": "Nastavení obnovení hesla",
     "block": "Zablokovat",
     "blockListDescription": "Můžete blokovat uživatele, kteří vás obtěžují. Od uživatelů na vašem osobním seznamu blokovaných uživatelů nebudete moci přijímat žádné zprávy ani pozvánky do místnosti.",
     "blockedUsers": "Zablokování uživatelé",
-    "alwaysUse24HourFormat": "Vypnuto",
-    "@alwaysUse24HourFormat": {
-        "description": "Set to true to always display time of day in 24 hour format."
-    },
     "noChatsFoundHere": "Nejsou zde žádné konverzace. Začněte novou konverzaci s někým pomocí tlačítka níže. ⤵️",
     "unread": "Nepřečtené",
     "space": "Prostor",

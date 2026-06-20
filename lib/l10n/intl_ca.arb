@@ -2340,7 +2340,6 @@
     "calls": "Trucades",
     "hideRedactedMessages": "Amaga els missatges estripats",
     "hideInvalidOrUnknownMessageFormats": "Amaga els missatges que tinguin un format desconegut",
-    "overview": "Resum",
     "passwordRecoverySettings": "Recuperació de contrasenya",
     "gallery": "Galeria",
     "noDatabaseEncryption": "No es pot xifrar la base de dades en aquesta plataforma",
@@ -2367,10 +2366,6 @@
                 "type": "String"
             }
         }
-    },
-    "alwaysUse24HourFormat": "true",
-    "@alwaysUse24HourFormat": {
-        "description": "Set to true to always display time of day in 24 hour format."
     },
     "appLockDescription": "Bloca l'app amb un pin quan no la facis servir",
     "swipeRightToLeftToReply": "Llisca de dreta esquerra per respondre",

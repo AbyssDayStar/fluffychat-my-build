@@ -2232,7 +2232,6 @@
     "publicSpaces": "Herkese açık alanlar",
     "initAppError": "Uygulama başlatılırken bir hata oluştu",
     "hideInvalidOrUnknownMessageFormats": "Geçersiz veya bilinmeyen mesaj biçimlerini gizle",
-    "overview": "Genel görünüm",
     "chatCanBeDiscoveredViaSearchOnServer": "Sohbet {server} üzerinde aranarak keşfedilebilir",
     "@chatCanBeDiscoveredViaSearchOnServer": {
         "type": "String",
@@ -2341,10 +2340,6 @@
     "knockRestricted": "Tıklatma kısıtlı",
     "restricted": "Kısıtlı",
     "swipeRightToLeftToReply": "Yanıtlamak için sağdan sola kaydır",
-    "alwaysUse24HourFormat": "false",
-    "@alwaysUse24HourFormat": {
-        "description": "Set to true to always display time of day in 24 hour format."
-    },
     "noMoreChatsFound": "Başka sohbet bulunamadı...",
     "goToSpace": "Alana git: {space}",
     "@goToSpace": {

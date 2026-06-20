@@ -2300,7 +2300,6 @@
     "customEmojisAndStickers": "الرموز التعبيرية والملصقات المخصصة",
     "hideRedactedMessagesBody": "إذا قام شخص ما بتنقيح رسالة، فلن تكون هذه الرسالة مرئية في المحادثة بعد الآن.",
     "hideInvalidOrUnknownMessageFormats": "إخفاء تنسيقات الرسائل غير الصالحة أو غير المعروفة",
-    "overview": "نظرة عامة",
     "passwordRecoverySettings": "إعدادات استعادة كلمة المرور",
     "globalChatId": "معرف المحادثة العامة",
     "accessAndVisibilityDescription": "من المسموح له بالانضمام إلى هذه المحادثة وكيف يمكن اكتشاف المحادثة.",
@@ -2341,10 +2340,6 @@
     "searchMore": "ابحث أكثر...",
     "gallery": "المعرض",
     "swipeRightToLeftToReply": "اسحب من اليمين إلى اليسار للرد",
-    "alwaysUse24HourFormat": "علّم لعرض الوقت بنسق 24 ساعة دائما.‏",
-    "@alwaysUse24HourFormat": {
-        "description": "Set to true to always display time of day in 24 hour format."
-    },
     "noMoreChatsFound": "لم يتم العثور على دردشات...",
     "unread": "غير المقروءة",
     "space": "المساحة",

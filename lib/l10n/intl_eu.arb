@@ -2319,7 +2319,6 @@
     "hideRedactedMessages": "Ezkutatu atzera botatako mezuak",
     "hideRedactedMessagesBody": "Norbaitek mezuren bat atzera botaz gero, mezua txatetik kenduko da, abisurik gabe.",
     "hideInvalidOrUnknownMessageFormats": "Ezkutatu mezuen formatu ezezagun edo baliogabea",
-    "overview": "Ikuspegi orokorra",
     "passwordRecoverySettings": "Pasahitza berreskuratzeko ezarpenak",
     "globalChatId": "Txat ID orokorra",
     "calls": "Deiak",
@@ -2341,10 +2340,6 @@
     "restricted": "Mugatuta",
     "knockRestricted": "Eskatu baimena sarrera mugatua duen txatean",
     "swipeRightToLeftToReply": "Herrestatu eskuin-ezker erantzuteko",
-    "alwaysUse24HourFormat": "false",
-    "@alwaysUse24HourFormat": {
-        "description": "Set to true to always display time of day in 24 hour format."
-    },
     "noMoreChatsFound": "Ez da beste txatik aurkitu...",
     "unread": "Irakurtzeke",
     "space": "Gunea",

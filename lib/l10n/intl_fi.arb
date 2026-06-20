@@ -2147,10 +2147,6 @@
     "accessAndVisibility": "Pääsy ja näkyvyys",
     "unread": "Lukemattomat",
     "noMoreChatsFound": "Lisää keskusteluja ei löytynyt...",
-    "alwaysUse24HourFormat": "väärä",
-    "@alwaysUse24HourFormat": {
-        "description": "Set to true to always display time of day in 24 hour format."
-    },
     "select": "Valitse",
     "searchForUsers": "Etsi @users...",
     "pleaseEnterYourCurrentPassword": "Anna nykyinen salasanasi",
@@ -2212,7 +2208,6 @@
     "blockedUsers": "Estetyt käyttäjät",
     "blockListDescription": "Voit estää sinua häiritsevät käyttäjät. Et voi vastaanottaa viestejä tai huonekutsuja henkilökohtaisella estolistallasi olevilta käyttäjiltä.",
     "blockUsername": "Jätä käyttäjänimi huomiotta",
-    "overview": "Yleiskatsaus",
     "passwordRecoverySettings": "Salasanan palautusasetukset",
     "sendImages": "Lähetä {count} kuva",
     "@sendImages": {

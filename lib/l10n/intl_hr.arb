@@ -2180,7 +2180,6 @@
     "globalChatId": "Globalni ID chata",
     "hideRedactedMessages": "Sakrij redigirane poruke",
     "hideInvalidOrUnknownMessageFormats": "Sakrij nevažeće ili nepoznate formate poruka",
-    "overview": "Pregled",
     "passwordRecoverySettings": "Postavke za obnavljanje lozinke",
     "usersMustKnock": "Korisnici moraju pokucati",
     "noOneCanJoin": "Nitko se ne može pridružiti",
@@ -2341,10 +2340,6 @@
         "count": {}
     },
     "swipeRightToLeftToReply": "Za odgovaranje povuci prstom zdesna ulijevo",
-    "alwaysUse24HourFormat": "true",
-    "@alwaysUse24HourFormat": {
-        "description": "Set to true to always display time of day in 24 hour format."
-    },
     "sendingAttachment": "Slanje priloga …",
     "ignoreUser": "Zanemari korisnika",
     "aboutHomeserver": "Informacije o {homeserver}",

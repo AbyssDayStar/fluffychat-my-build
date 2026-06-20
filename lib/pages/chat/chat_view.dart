@@ -88,8 +88,11 @@ class ChatView extends StatelessWidget {
               key: Key('chat_page'),
               extendBodyBehindAppBar: true,
               appBar: AppBar(
-                elevation: 4,
-                scrolledUnderElevation: 4,
+                shape: FluffyThemes.isColumnMode(context)
+                    ? Border(
+                        bottom: BorderSide(color: theme.dividerColor, width: 1),
+                      )
+                    : null,
                 actionsIconTheme: IconThemeData(
                   color: controller.selectedEvents.isEmpty
                       ? null
@@ -98,7 +101,7 @@ class ChatView extends StatelessWidget {
                 backgroundColor: controller.selectedEvents.isEmpty
                     ? controller.activeThreadId != null
                           ? theme.colorScheme.secondaryContainer
-                          : theme.colorScheme.surfaceBright.withAlpha(240)
+                          : theme.colorScheme.surface.withAlpha(240)
                     : theme.colorScheme.tertiaryContainer,
                 automaticallyImplyLeading: false,
                 leading: controller.selectMode

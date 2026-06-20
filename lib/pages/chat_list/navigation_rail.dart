@@ -49,11 +49,12 @@ class SpacesNavigationRail extends StatelessWidget {
             return SizedBox(
               width: FluffyThemes.isColumnMode(context)
                   ? FluffyThemes.navRailWidth
-                  : FluffyThemes.navRailWidth * 0.75,
+                  : FluffyThemes.navRailWidth - 8,
               child: Column(
                 children: [
                   Expanded(
                     child: ListView.builder(
+                      padding: EdgeInsets.symmetric(vertical: 4),
                       scrollDirection: Axis.vertical,
                       itemCount: allSpaces.length + 2,
                       itemBuilder: (context, i) {
@@ -62,11 +63,11 @@ class SpacesNavigationRail extends StatelessWidget {
                             isSelected: activeSpaceId == null,
                             onTap: onGoToChats,
                             icon: const Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(12.0),
                               child: Icon(Icons.forum_outlined),
                             ),
                             selectedIcon: const Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(12.0),
                               child: Icon(Icons.forum),
                             ),
                             toolTip: L10n.of(context).chats,
@@ -79,7 +80,7 @@ class SpacesNavigationRail extends StatelessWidget {
                             isSelected: false,
                             onTap: () => context.go('/rooms/newspace'),
                             icon: const Padding(
-                              padding: EdgeInsets.all(6.0),
+                              padding: EdgeInsets.all(12.0),
                               child: Icon(Icons.add),
                             ),
                             toolTip: L10n.of(context).createNewSpace,
@@ -102,7 +103,7 @@ class SpacesNavigationRail extends StatelessWidget {
                           icon: Avatar(
                             mxContent: allSpaces[i].avatar,
                             name: displayname,
-                            size: 36,
+                            //size: 36,
                             shapeBorder: RoundedSuperellipseBorder(
                               side: BorderSide(
                                 width: 1,

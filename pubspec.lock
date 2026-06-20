@@ -397,10 +397,10 @@ packages:
     dependency: "direct main"
     description:
       name: file_picker
-      sha256: fc83774ce5bd7ce08168333b5e53dbe9090ec04eb21e7aa7cd7bac921032c934
+      sha256: fdc6a37f715d19f35b131decf1ce39242eeed5ddae18c0818c3eccb731ab76be
       url: "https://pub.dev"
     source: hosted
-    version: "12.0.0-beta.5"
+    version: "12.0.0-beta.7"
   file_selector:
     dependency: "direct main"
     description:
@@ -519,10 +519,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_local_notifications
-      sha256: be38e3854d2baabcda8e16966a5fe8748cebb655bb94701494da0f052c2fc352
+      sha256: a0d7141f14cabcee42967470a858dfc99dd6cfb70d3cab404bacfcafa9e84e70
       url: "https://pub.dev"
     source: hosted
-    version: "22.0.0"
+    version: "22.0.1"
   flutter_local_notifications_linux:
     dependency: transitive
     description:
@@ -551,10 +551,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_local_notifications_windows
-      sha256: "5aeed973a0c1480706784fad05c5c3a911335ebb561b2274b47fe80b375201e1"
+      sha256: "6f43bdd03b171b7a90f22647506fea33e2bb12294b7c7c7a3d690e960a382945"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "3.1.1"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -686,10 +686,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_webrtc
-      sha256: c7b0a67ca2c878575fc5c146d801cd874f58f5f1ef5fa6e8eb0c93d413beb948
+      sha256: c4e8db6ed337b8c30d76cd7cd8c91693f5495e1aeb556cbcb73f1e5d5bdcf020
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.1"
+    version: "1.5.1"
   frontend_server_client:
     dependency: transitive
     description:
@@ -715,34 +715,34 @@ packages:
     dependency: "direct main"
     description:
       name: geolocator
-      sha256: "79939537046c9025be47ec645f35c8090ecadb6fe98eba146a0d25e8c1357516"
+      sha256: e146a6d63776582651e97a79cbe459f8e1211b100101fadcd84db83361fa599f
       url: "https://pub.dev"
     source: hosted
-    version: "14.0.2"
+    version: "14.0.3"
   geolocator_android:
     dependency: transitive
     description:
       name: geolocator_android
-      sha256: "179c3cb66dfa674fc9ccbf2be872a02658724d1c067634e2c427cf6df7df901a"
+      sha256: "86ea1654e4f61ff51466848e91c116b422d6010ea269fda0fbe1af7e9e742ce1"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.2"
+    version: "5.0.3"
   geolocator_apple:
     dependency: transitive
     description:
       name: geolocator_apple
-      sha256: dbdd8789d5aaf14cf69f74d4925ad1336b4433a6efdf2fce91e8955dc921bf22
+      sha256: "853803d6bb1713c094e935b4a5ae5f19c0308acf81da13fa9ff84fb4c70c0b73"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.13"
+    version: "2.3.14"
   geolocator_linux:
     dependency: transitive
     description:
       name: geolocator_linux
-      sha256: b02993d59b753bf1967ed28862002841aec5cdd5090c1f495213b32ce488aced
+      sha256: "3da7420f11c3496511a5bd3c18fd67b88e5659f12e46b7ce00a788f6996e850a"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.5"
+    version: "0.2.6"
   geolocator_platform_interface:
     dependency: transitive
     description:
@@ -755,10 +755,10 @@ packages:
     dependency: transitive
     description:
       name: geolocator_web
-      sha256: b1ae9bdfd90f861fde8fd4f209c37b953d65e92823cb73c7dee1fa021b06f172
+      sha256: "19e485a0f8d6a88abcf9c53cba3a4105e14b7435ed8ac1c108c067b938fe8429"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.3"
+    version: "4.1.4"
   geolocator_windows:
     dependency: transitive
     description:
@@ -1104,10 +1104,10 @@ packages:
     dependency: "direct main"
     description:
       name: matrix
-      sha256: e52477dcc118fe89b7f40123c2dc9fe681fee0529738007c8ba82ccaf9fb6993
+      sha256: e3b629ed935783d3e1b5d348575d10986eb80fb478a0186f21cd5470db710b6f
       url: "https://pub.dev"
     source: hosted
-    version: "7.2.3"
+    version: "7.2.4"
   meta:
     dependency: transitive
     description:
@@ -1288,10 +1288,10 @@ packages:
     dependency: "direct main"
     description:
       name: particles_network
-      sha256: f35f4e2bbd6872c6cff1d13628853d2fb2df6cc83b88c4f4757afe70333f5c6a
+      sha256: afa9c9c70d7f13dcb2a4059edde4b6baa3b9a69ab899712522cbbd68bbd59095
       url: "https://pub.dev"
     source: hosted
-    version: "1.9.4"
+    version: "1.9.5"
   pasteboard:
     dependency: "direct main"
     description:
@@ -1312,10 +1312,10 @@ packages:
     dependency: "direct main"
     description:
       name: path_provider
-      sha256: "50c5dd5b6e1aaf6fb3a78b33f6aa3afca52bf903a8a5298f53101fdaee55bbcd"
+      sha256: a7f4874f987173da295a61c181b8ee71dab59b332a486b391babf26a1b884825
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.5"
+    version: "2.1.6"
   path_provider_android:
     dependency: transitive
     description:

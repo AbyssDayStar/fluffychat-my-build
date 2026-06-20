@@ -34,6 +34,7 @@ import 'package:fluffychat/widgets/adaptive_dialogs/show_ok_cancel_alert_dialog.
 import 'package:fluffychat/widgets/adaptive_dialogs/show_text_input_dialog.dart';
 import 'package:fluffychat/widgets/future_loading_dialog.dart';
 import 'package:fluffychat/widgets/matrix.dart';
+import 'package:fluffychat/widgets/mxc_image.dart';
 import 'package:fluffychat/widgets/share_scaffold_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -496,9 +497,13 @@ class ChatController extends State<ChatPageWithRoom>
 
   String? animateInEventId;
 
-  void _insert(int index) {
+  Future<void> _insert(int index) async {
     if (index > 0) return;
-    animateInEventId = timeline?.events.firstOrNull?.eventId;
+    final firstEvent = timeline?.events.firstOrNull;
+    final eventId = firstEvent?.transactionId ?? firstEvent?.eventId;
+    animateInEventId = eventId;
+    await Future.delayed(FluffyThemes.animationDuration);
+    if (animateInEventId == eventId) animateInEventId = null;
   }
 
   void updateView() {
@@ -586,9 +591,16 @@ class ChatController extends State<ChatPageWithRoom>
   void dispose() {
     timeline?.cancelSubscriptions();
     timeline = null;
+    _storeInputTimeoutTimer?.cancel();
+    typingCoolDown?.cancel();
+    typingTimeout?.cancel();
+    sendController.dispose();
+    scrollController.dispose();
     inputFocus.removeListener(_inputFocusListener);
+    inputFocus.dispose();
     web.window.removeEventListener('paste', _handleClipboardFilePasteWeb);
     if (currentlyTyping) room.setTyping(false);
+    MxcImage.clearCache(widget.room.id);
     super.dispose();
   }
 
