@@ -1853,7 +1853,6 @@
     "scanQrCode": "Naskenujte QR kód",
     "sendOnEnter": "Odeslat při vstupu",
     "homeserver": "Domácí server",
-    "serverRequiresEmail": "Tento server potřebuje k registraci ověřit vaši e -mailovou adresu.",
     "addToBundle": "Přidat do balíčku",
     "addAccount": "Přidat účet",
     "bundleName": "Název balíčku",
@@ -2548,26 +2547,10 @@
         }
     },
     "commandHint_roomupgrade": "Aktualizovat místnost na danou verzi",
-    "commandHint_ignore": "",
-    "doesNotSeemToBeAValidHomeserver": "",
-    "notificationRuleEncryptedRoomOneToOneDescription": "",
-    "enterNewChat": "",
-    "reset": "",
-    "sendCanceled": "",
-    "changeTheCanonicalRoomAlias": "",
-    "notificationRuleRoomOneToOneDescription": "",
-    "blur": "",
-    "goToSpace": "",
     "@goToSpace": {
         "type": "String",
         "space": {}
     },
-    "restricted": "",
-    "noDatabaseEncryption": "",
-    "createNewTag": "",
-    "knockRestricted": "",
-    "notificationRuleRoomServerAcl": "",
-    "countReplies": "",
     "@countReplies": {
         "type": "int",
         "placeholders": {
@@ -2576,10 +2559,6 @@
             }
         }
     },
-    "join": "",
-    "takeAPhoto": "",
-    "notificationRuleServerAcl": "",
-    "userLevel": "",
     "@userLevel": {
         "type": "String",
         "placeholders": {
@@ -2588,10 +2567,6 @@
             }
         }
     },
-    "changelog": "",
-    "advancedConfigurations": "",
-    "opacity": "",
-    "updateInstalled": "",
     "@updateInstalled": {
         "type": "String",
         "placeholders": {
@@ -2600,19 +2575,6 @@
             }
         }
     },
-    "createNewChat": "",
-    "makeModerator": "",
-    "notificationRuleEncryptedDescription": "",
-    "commandHint_unignore": "",
-    "notificationRuleRoomOneToOne": "",
-    "discover": "",
-    "notificationRuleEncryptedRoomOneToOne": "",
-    "tagName": "",
-    "clientWellKnownInformation": "",
-    "inviteOtherUsers": "",
-    "setPowerLevelDescription": "",
-    "changeTheVisibilityOfChatHistory": "",
-    "adminLevel": "",
     "@adminLevel": {
         "type": "String",
         "placeholders": {
@@ -2621,46 +2583,13 @@
             }
         }
     },
-    "matrixId": "",
-    "identityServer": "",
-    "support": "",
-    "notificationRuleMessageDescription": "",
-    "setPowerLevel": "",
-    "notificationRuleServerAclDescription": "",
-    "mute": "",
     "@mute": {
         "description": "This should be a very short string because there is not much space in the button!"
     },
-    "sendRoomNotifications": "",
-    "notificationRuleMessage": "",
-    "removeModeratorRights": "",
-    "chatPermissionsDescription": "",
-    "contentNotificationSettings": "",
-    "addTag": "",
-    "notificationRuleRoomServerAclDescription": "",
-    "removeAdminRights": "",
-    "owner": "",
-    "powerLevel": "",
-    "playSoundOnNotification": "",
-    "changeGeneralChatSettings": "",
-    "stickers": "",
-    "makeAdmin": "",
-    "searchOrEnterHomeserverAddress": "",
-    "markAsUnread": "",
-    "transparent": "",
-    "notificationRuleJitsi": "",
-    "unsetLowPriority": "",
-    "setLowPriority": "",
-    "changeTheDescriptionOfTheGroup": "",
-    "thereAreCountUsersBlocked": "",
     "@thereAreCountUsersBlocked": {
         "type": "String",
         "count": {}
     },
-    "calculatingFileSize": "",
-    "addChatOrSubSpace": "",
-    "changeTheChatPermissions": "",
-    "unknownPushRule": "",
     "@unknownPushRule": {
         "type": "String",
         "placeholders": {
@@ -2669,11 +2598,6 @@
             }
         }
     },
-    "noticeChatBackupDeviceVerification": "",
-    "contactServerSecurity": "",
-    "loginWithMatrixId": "",
-    "searchMore": "",
-    "unreadChatsInApp": "",
     "@unreadChatsInApp": {
         "type": "String",
         "placeholders": {
@@ -2685,8 +2609,6 @@
             }
         }
     },
-    "removeTag": "",
-    "countVotes": "",
     "@countVotes": {
         "type": "int",
         "placeholders": {
@@ -2695,7 +2617,6 @@
             }
         }
     },
-    "moderatorLevel": "",
     "@moderatorLevel": {
         "type": "String",
         "placeholders": {
@@ -2704,11 +2625,6 @@
             }
         }
     },
-    "notificationRuleJitsiDescription": "",
-    "incomingMessages": "",
-    "supportFluffyChat": "",
-    "notificationRuleEncrypted": "",
-    "searchIn": "",
     "@searchIn": {
         "type": "String",
         "placeholders": {
