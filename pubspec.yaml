@@ -23,7 +23,7 @@ dependencies:
   collection: ^1.18.0
   cross_file: ^0.3.5
   desktop_drop: ^0.7.1
-  device_info_plus: ^13.1.0
+  device_info_plus: ^13.2.0
   dynamic_color: ^1.8.1
   emoji_picker_flutter: ^4.4.0
   file_picker: ^12.0.0-beta.7
@@ -35,7 +35,7 @@ dependencies:
   flutter_local_notifications: ^22.0.1
   flutter_localizations:
     sdk: flutter
-  flutter_map: ^8.3.0
+  flutter_map: ^8.3.1
   flutter_new_badger: ^1.1.1
   flutter_secure_storage: ^10.3.1
   flutter_shortcuts_new: ^2.0.0
@@ -49,20 +49,17 @@ dependencies:
   html: ^0.15.4
   http: ^1.6.0
   image: ^4.7.2
-  image_picker: ^1.2.2
+  image_picker: ^1.2.3
   intl: any
-  just_audio: ^0.10.5
-  latlong2: ^0.9.1
+  just_audio: ^0.10.6
+  latlong2: ^0.10.1
   local_auth: ^3.0.1
-  matrix: #^7.4.0
-    git:
-      url: https://github.com/famedly/matrix-dart-sdk.git
-      ref: krille/fix-soft-logout-for-oidc
+  matrix: ^8.0.0
   mime: ^2.0.0
   native_imaging: ^0.4.0
   open_file: ^4.0.0
   opus_caf_converter_dart: ^1.0.1
-  package_info_plus: ^10.1.0
+  package_info_plus: ^10.2.0
   particles_network: ^1.9.5
   pasteboard: ^0.5.0
   path: ^1.9.0
@@ -70,7 +67,7 @@ dependencies:
   pretty_qr_code: ^3.6.0
   provider: ^6.0.2
   punycode: ^1.0.0
-  qr_code_scanner_plus: ^2.1.2
+  qr_code_scanner_plus: ^2.2.0
   qr_image: ^1.0.0
   receive_sharing_intent: ^1.8.1
   record: ^7.1.1
@@ -91,7 +88,7 @@ dependencies:
   webrtc_interface: ^1.5.1
 
 dev_dependencies:
-  dart_code_linter: ^4.1.5
+  dart_code_linter: ^4.1.6
   flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
   flutter_test:
@@ -99,7 +96,6 @@ dev_dependencies:
   integration_test:
     sdk: flutter
   license_checker: ^1.6.2
-  translations_cleaner: ^0.1.1
 
 flutter:
   generate: true
