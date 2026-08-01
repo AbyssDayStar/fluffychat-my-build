@@ -334,7 +334,7 @@
         "placeholders": {}
     },
     "removeDevicesDescription": "Tu tiksi izrakstīts no šīs ierīces un vairs nevarēsi saņemt ziņas.",
-    "countParticipants": "{count} dalībnieki",
+    "countParticipants": "{count, plural, zero{{count} dalībnieku} one{{count} dalībnieks} other{{count} dalībnieki}}",
     "@countParticipants": {
         "type": "String",
         "placeholders": {
@@ -1016,11 +1016,6 @@
         "type": "String",
         "description": "Usage hint for the command /plain"
     },
-    "emoteSettings": "Emociju iestatījumi",
-    "@emoteSettings": {
-        "type": "String",
-        "placeholders": {}
-    },
     "experimentalVideoCalls": "Izmēģinājuma video zvani",
     "openCamera": "Atvērt kameru",
     "@openCamera": {
@@ -1432,7 +1427,6 @@
     },
     "messageInfo": "Informācija par ziņu",
     "disableEncryptionWarning": "Drošības iemeslu dēļ tērzēšanā nevar atspējot šifrēšanu, ja tā ir pirms tam ir bijusi iespējota.",
-    "directChat": "Tiešā tērzēšana",
     "encryptionNotEnabled": "Šifrēšana nav iespējota",
     "@encryptionNotEnabled": {
         "type": "String",
@@ -2197,7 +2191,7 @@
     "chatPermissionsDescription": "Noteikt, kurš spēka līmenis ir nepieciešams noteiktām darbībām šajā tērzēšanā. Spēka līmeņi 0, 50 un 100 parasti atbilst lietotājiem, moderatoriem un pārvaldītājiem, bet ir iespējams jebkāds iedalījums.",
     "doesNotSeemToBeAValidHomeserver": "Neizskatās pēc saderīga mājasservera. Nepareizs URL?",
     "loginWithMatrixId": "Pieteikties ar Matrix-Id",
-    "updateInstalled": "🎉 Atjauninājums {version} uzstādīts.",
+    "updateInstalled": "🎉 Atjauninājums {version} uzstādīts!",
     "@updateInstalled": {
         "type": "String",
         "placeholders": {
@@ -2627,6 +2621,6 @@
     "disableBiometrics": "Atspējot biometrisko autentifikāciju",
     "biometricsDescription": "Ar biometrisko autentifikāciju jūs variet atslēgt lietotni ar savu seju vai pirksta nospiedumu. Iespējas ir atkarīgas no jūsu konkrētās ierīces.",
     "useAppLock": "Izmantot lietotnes aizslēgšanu",
-    "unlockWithBiometrics": "Atslēgt ar biometrisko autentifikāciju",
-    "resetPin": "Atiestatīt PIN kodu"
+    "unlockWithBiometrics": "Atslēgt ar biometrisko autentificēšanos",
+    "resetPin": "Atiestatīt PIN"
 }

@@ -398,11 +398,6 @@
         "type": "String",
         "placeholders": {}
     },
-    "emoteSettings": "Emote-ezarpenak",
-    "@emoteSettings": {
-        "type": "String",
-        "placeholders": {}
-    },
     "emoteShortcode": "Laburdura",
     "@emoteShortcode": {
         "type": "String",
@@ -1945,7 +1940,6 @@
         }
     },
     "redactMessageDescription": "Mezua elkarrizketa honetako partaide guztientzat botako da atzera. Ezin da desegin.",
-    "directChat": "Banakako txata",
     "wrongPinEntered": "PIN okerra! Saiatu berriro {seconds} segundu barru…",
     "@wrongPinEntered": {
         "type": "String",
@@ -2559,5 +2553,40 @@
             }
         }
     },
-    "deviceIdentityKey": "Gailuaren identitate-gakoa"
+    "deviceIdentityKey": "Gailuaren identitate-gakoa",
+    "waitingForKeys": "Gakoen zain… Mantendu aktibo beste gailua.",
+    "@waitingForKeys": {
+        "type": "String",
+        "placeholders": {}
+    },
+    "noKeysTransmitted": "Ez da gakorik igorri. Saiatu berriro.",
+    "@noKeysTransmitted": {
+        "type": "String",
+        "placeholders": {}
+    },
+    "openFile": "Ireki fitxategia",
+    "@openFile": {
+        "type": "String",
+        "placeholders": {}
+    },
+    "passphraseLengthRequirement": "Gutxienez 12 karaktere behar ditu.",
+    "@passphraseLengthRequirement": {
+        "type": "String",
+        "placeholders": {}
+    },
+    "passphraseUpperAndLowerCaseRequirement": "Karaktere larriak eta xeheak ditu.",
+    "@passphraseUpperAndLowerCaseRequirement": {
+        "type": "String",
+        "placeholders": {}
+    },
+    "passphraseSpecialCharactersRequirement": "Karaktere bereziak dauzka.",
+    "@passphraseSpecialCharactersRequirement": {
+        "type": "String",
+        "placeholders": {}
+    },
+    "passphraseNumberRequirement": "Zenbaki bat dauka.",
+    "@passphraseNumberRequirement": {
+        "type": "String",
+        "placeholders": {}
+    }
 }

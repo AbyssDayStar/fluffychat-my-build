@@ -1,4 +1,54 @@
 {
+    "editImage": "Edit image",
+    "@editImage": {
+        "type": "String",
+        "placeholders": {}
+    },
+    "rotateLeft": "Rotate left",
+    "@rotateLeft": {
+        "type": "String",
+        "placeholders": {}
+    },
+    "rotateRight": "Rotate right",
+    "@rotateRight": {
+        "type": "String",
+        "placeholders": {}
+    },
+    "mirror": "Mirror",
+    "@mirror": {
+        "type": "String",
+        "placeholders": {}
+    },
+    "save": "Save",
+    "@save": {
+        "type": "String",
+        "placeholders": {}
+    },
+    "draw": "Draw",
+    "@draw": {
+        "type": "String",
+        "placeholders": {}
+    },
+    "undo": "Undo",
+    "@undo": {
+        "type": "String",
+        "placeholders": {}
+    },
+    "clear": "Clear",
+    "@clear": {
+        "type": "String",
+        "placeholders": {}
+    },
+    "eraser": "Eraser",
+    "@eraser": {
+        "type": "String",
+        "placeholders": {}
+    },
+    "crop": "Crop",
+    "@crop": {
+        "type": "String",
+        "placeholders": {}
+    },
     "@@locale": "en",
     "@@last_modified": "2021-08-14 12:38:37.885451",
     "repeatPassword": "Repeat password",
@@ -732,11 +782,6 @@
         "type": "String",
         "placeholders": {}
     },
-    "emoteSettings": "Emote Settings",
-    "@emoteSettings": {
-        "type": "String",
-        "placeholders": {}
-    },
     "globalChatId": "Global chat ID",
     "accessAndVisibility": "Access and visibility",
     "accessAndVisibilityDescription": "Who is allowed to join this chat and how the chat can be discovered.",
@@ -949,7 +994,7 @@
             }
         }
     },
-    "isTyping": "is typing…",
+    "isTyping": "is typing",
     "@isTyping": {
         "type": "String",
         "placeholders": {}
@@ -1323,7 +1368,6 @@
             }
         }
     },
-    "directChat": "Direct chat",
     "redactedByBecause": "Redacted by {username} because: \"{reason}\"",
     "@redactedByBecause": {
         "type": "String",
@@ -2712,5 +2756,9 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "loadingMessages": "Loading messages...",
+    "buildDoesNotSupportFirebase": "This build does not support firebase cloud messaging.",
+    "unableToRegisterDeviceForFirebase": "Unable to register device for firebase cloud messaging.",
+    "unifiedPushDistributors": "Unified Push distributors:"
 }

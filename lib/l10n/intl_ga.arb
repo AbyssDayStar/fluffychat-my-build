@@ -963,11 +963,6 @@
         "type": "String",
         "placeholders": {}
     },
-    "emoteSettings": "Socruithe straoiseoige",
-    "@emoteSettings": {
-        "type": "String",
-        "placeholders": {}
-    },
     "downloadFile": "Íoslódáil comhad",
     "@downloadFile": {
         "type": "String",
@@ -2088,7 +2083,6 @@
     },
     "noMoreChatsFound": "Níor aimsíodh a thuilleadh comhráite...",
     "space": "Spás",
-    "directChat": "Comhrá díreach",
     "redactedByBecause": "Athbhreithnithe ag {username} mar: \"{reason}\"",
     "@redactedByBecause": {
         "type": "String",
@@ -2712,5 +2706,22 @@
     "edited": "(eagarthóireacht déanta)",
     "couldNotBeSent": "Níorbh fhéidir a sheoladh",
     "yesterday": "Inné",
-    "resetRecoveryKey": "Athshocraigh eochair aisghabhála"
+    "resetRecoveryKey": "Athshocraigh eochair aisghabhála",
+    "pleaseEnter6Digits": "Cuir isteach 6 dhigit le do thoil chun an glas aip a chumasú.",
+    "disableAppLock": "Díchumasaigh glasáil aipeanna",
+    "disableAppLockAreYouSure": "An bhfuil tú cinnte gur mian leat glas na haipe a dhíchumasú?",
+    "enableBiometrics": "Cumasaigh fíordheimhniú bithmhéadrach",
+    "disableBiometrics": "Díchumasaigh fíordheimhniú bithmhéadrach",
+    "biometricsDescription": "Le fíordheimhniú bithmhéadrach is féidir leat an aip a dhíghlasáil le d’aghaidh nó le do mhéarlorg. Braitheann na cumais ar do ghléas.",
+    "useAppLock": "Úsáid glas aip",
+    "unlockWithBiometrics": "Díghlasáil le fíordheimhniú bithmhéadrach",
+    "resetPin": "Athshocraigh biorán",
+    "forwardCountMessages": "Ar aghaidh {count, plural, =1{teachtaireacht amháin} other{{count} teachtaireachtaí}}?",
+    "@forwardCountMessages": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    }
 }

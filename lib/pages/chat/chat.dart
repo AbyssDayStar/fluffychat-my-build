@@ -557,24 +557,49 @@ class ChatController extends State<ChatPageWithRoom>
   Future<void>? _setReadMarkerFuture;
 
   void setReadMarker({String? eventId}) {
-    if (eventId?.isValidMatrixIdStrict() == false) return;
-    if (_setReadMarkerFuture != null) return;
-    if (_scrolledUp) return;
-    if (scrollUpBannerEventId != null) return;
-
-    if (eventId == null &&
-        !room.hasNewMessages &&
-        room.notificationCount == 0) {
-      return;
-    }
-
     // Do not send read markers when app is not in foreground
     if (WidgetsBinding.instance.lifecycleState != AppLifecycleState.resumed) {
       return;
     }
 
+    // We are already setting a read marker
+    if (_setReadMarkerFuture != null) return;
+
+    // We only set read marker if we are at the bottom
+    if (_scrolledUp) return;
+
+    // We do not set read marker if we offer user the scroll up banner
+    if (scrollUpBannerEventId != null) return;
+
+    // We do not set read marker if timeline is empty
     final timeline = this.timeline;
     if (timeline == null || timeline.events.isEmpty) return;
+
+    final setOnLatestEvent = eventId == null;
+    eventId ??= timeline.events
+        .firstWhereOrNull(
+          (event) =>
+              room.client.pushruleEvaluator.match(event).notify &&
+              event.eventId.isValidMatrixIdStrict(),
+        )
+        ?.eventId;
+
+    // There is no event we could place a read marker
+    if (eventId == null) return;
+
+    // This is a sending event, we do not set a readmarker yet
+    if (eventId.isValidMatrixIdStrict() == false) return;
+
+    // Already set a read marker on this event
+    if (room.fullyRead == eventId) return;
+
+    // Set a readmarker on a specific event, not latest, but room is not unread
+    // at all.
+    if (setOnLatestEvent &&
+        !room.hasNewMessages &&
+        room.notificationCount == 0) {
+      return;
+    }
 
     Logs().d('Set read marker...', eventId);
     // ignore: unawaited_futures
@@ -599,6 +624,7 @@ class ChatController extends State<ChatPageWithRoom>
     scrollController.dispose();
     inputFocus.removeListener(_inputFocusListener);
     inputFocus.dispose();
+    _displayChatDetailsColumn.dispose();
     web.window.removeEventListener('paste', _handleClipboardFilePasteWeb);
     if (currentlyTyping) room.setTyping(false);
     MxcImage.clearCache(widget.room.id);
@@ -657,6 +683,12 @@ class ChatController extends State<ChatPageWithRoom>
       parseCommands = false;
     }
 
+    if (currentlyTyping) {
+      typingCoolDown?.cancel();
+      currentlyTyping = false;
+      room.setTyping(false);
+    }
+
     // ignore: unawaited_futures
     room.sendTextEvent(
       sendController.text,
@@ -710,8 +742,7 @@ class ChatController extends State<ChatPageWithRoom>
   }
 
   Future<void> openCameraAction() async {
-    // Make sure the textfield is unfocused before opening the camera
-    FocusScope.of(context).requestFocus(FocusNode());
+    inputFocus.unfocus();
     final file = await ImagePicker().pickImage(source: ImageSource.camera);
     if (file == null) return;
     if (!mounted) return;
@@ -813,8 +844,7 @@ class ChatController extends State<ChatPageWithRoom>
   }
 
   Future<void> openVideoCameraAction() async {
-    // Make sure the textfield is unfocused before opening the camera
-    FocusScope.of(context).requestFocus(FocusNode());
+    inputFocus.unfocus();
     final file = await ImagePicker().pickVideo(
       source: ImageSource.camera,
       maxDuration: const Duration(minutes: 1),
@@ -921,18 +951,11 @@ class ChatController extends State<ChatPageWithRoom>
   String _getSelectedEventString() {
     var copyString = '';
     if (selectedEvents.length == 1) {
-      return selectedEvents.first
-          .getDisplayEvent(timeline!)
-          .calcLocalizedBodyFallback(MatrixLocals(L10n.of(context)));
+      return selectedEvents.first.getDisplayEvent(timeline!).body;
     }
     for (final event in selectedEvents) {
       if (copyString.isNotEmpty) copyString += '\n\n';
-      copyString += event
-          .getDisplayEvent(timeline!)
-          .calcLocalizedBodyFallback(
-            MatrixLocals(L10n.of(context)),
-            withSenderNamePrefix: true,
-          );
+      copyString += event.getDisplayEvent(timeline!).body;
     }
     return copyString;
   }

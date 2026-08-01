@@ -14,15 +14,19 @@ import 'package:fluffychat/config/setting_keys.dart';
 import 'package:fluffychat/l10n/l10n.dart';
 import 'package:fluffychat/utils/client_download_content_extension.dart';
 import 'package:fluffychat/utils/client_manager.dart';
+import 'package:fluffychat/utils/matrix_sdk_extensions/flutter_matrix_dart_sdk_database/builder.dart';
 import 'package:fluffychat/utils/matrix_sdk_extensions/matrix_locals.dart';
 import 'package:fluffychat/utils/notification_background_handler.dart';
 import 'package:fluffychat/utils/platform_infos.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_new_badger/flutter_new_badger.dart';
 import 'package:flutter_shortcuts_new/flutter_shortcuts_new.dart';
-import 'package:matrix/matrix.dart';
+import 'package:http/http.dart' as http;
+import 'package:matrix/matrix.dart' hide Result;
+import 'package:path/path.dart' as path;
 import 'package:shared_preferences/shared_preferences.dart';
 
 const notificationAvatarDimension = 128;
@@ -34,8 +38,12 @@ Future<void> pushHelper(
   L10n? l10n,
   String? activeRoomId,
   required FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
-  bool useNotificationActions = true,
 }) async {
+  l10n ??= await lookupL10n(PlatformDispatcher.instance.locale);
+
+  final ticker = Timer.periodic(const Duration(seconds: 1), (_) {
+    Logs().d('[PushHelper] Tick');
+  });
   try {
     await _tryPushHelper(
       notification,
@@ -43,32 +51,12 @@ Future<void> pushHelper(
       l10n: l10n,
       activeRoomId: activeRoomId,
       flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,
-      useNotificationActions: useNotificationActions,
-    );
+    ).timeout(const Duration(seconds: 30));
   } catch (e, s) {
-    l10n ??= await lookupL10n(PlatformDispatcher.instance.locale);
-    await flutterLocalNotificationsPlugin.show(
-      id: notification.hashCode,
-      title: l10n.newMessageInFluffyChat,
-      body: l10n.openAppToReadMessages,
-      notificationDetails: NotificationDetails(
-        iOS: const DarwinNotificationDetails(),
-        android: AndroidNotificationDetails(
-          AppConfig.pushNotificationsChannelId,
-          l10n.incomingMessages,
-          number: notification.counts?.unread,
-          ticker: l10n.unreadChatsInApp(
-            AppSettings.applicationName.value,
-            (notification.counts?.unread ?? 0).toString(),
-          ),
-          importance: Importance.high,
-          priority: Priority.max,
-          shortcutId: notification.roomId,
-        ),
-      ),
-    );
-
-    if (e is! TimeoutException && e is! IOException) {
+    if (PlatformInfos.isAndroid &&
+        e is! TimeoutException &&
+        e is! IOException &&
+        e is! http.ClientException) {
       Logs().e('Push Helper has crashed! Writing into temporary file...', e, s);
       final store = await SharedPreferences.getInstance();
       await store.setStringList(AppConfig.pushHelperCrashReportKey, [
@@ -76,7 +64,41 @@ Future<void> pushHelper(
         s.toString(),
       ]);
     }
+
+    if (notification.roomId != null) {
+      await flutterLocalNotificationsPlugin.show(
+        id: notification.notificationId,
+        title: l10n.newMessageInFluffyChat,
+        body: l10n.openAppToReadMessages,
+        notificationDetails: NotificationDetails(
+          iOS: DarwinNotificationDetails(
+            threadIdentifier:
+                '${notification.clientName}_${notification.roomId}',
+          ),
+          android: AndroidNotificationDetails(
+            AppConfig.pushNotificationsChannelId,
+            l10n.incomingMessages,
+            number: notification.counts?.unread,
+            ticker: l10n.unreadChatsInApp(
+              AppSettings.applicationName.value,
+              (notification.counts?.unread ?? 0).toString(),
+            ),
+            importance: Importance.high,
+            priority: Priority.max,
+            shortcutId: notification.roomId,
+            category: AndroidNotificationCategory.message,
+            groupKey: notification.clientName,
+          ),
+        ),
+      );
+    }
     rethrow;
+  } finally {
+    ticker.cancel();
+    if (PlatformInfos.isAndroid &&
+        await FlutterForegroundTask.isRunningService) {
+      await FlutterForegroundTask.stopService();
+    }
   }
 }
 
@@ -86,7 +108,6 @@ Future<void> _tryPushHelper(
   L10n? l10n,
   String? activeRoomId,
   required FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
-  bool useNotificationActions = true,
 }) async {
   final isBackgroundMessage = clients == null;
   Logs().v(
@@ -101,9 +122,7 @@ Future<void> _tryPushHelper(
     return;
   }
 
-  final clientName = notification.devices?.firstOrNull?.data?.tryGet<String>(
-    'client_name',
-  );
+  final clientName = notification.clientName;
   final store = await AppSettings.init();
 
   final client = clientName == null
@@ -119,24 +138,27 @@ Future<void> _tryPushHelper(
 
   lastReceivedPushNotification[client.clientName] = DateTime.now();
 
-  final event = await client.getEventByPushNotification(
-    notification,
-    storeInDatabase: false,
-  );
+  await client.roomsLoading;
 
-  final awaitingOneShotSync = client.oneShotSync();
+  final roomId = notification.roomId;
+  final eventId = notification.eventId;
+
   l10n ??= await L10n.delegate.load(PlatformDispatcher.instance.locale);
 
   updateAppBadge(notification.counts?.unread ?? 0);
 
-  if (event == null) {
+  if (eventId == null || roomId == null) {
     Logs().v('Notification is a clearing indicator.');
     if (clients?.length == 1 && (notification.counts?.unread == 0)) {
       await flutterLocalNotificationsPlugin.cancelAll();
     } else {
       // Make sure client is fully loaded and synced before dismiss notifications:
       await client.roomsLoading;
-      await awaitingOneShotSync;
+      await client
+          .oneShotSync()
+          .timeout(const Duration(seconds: 8))
+          .catchError((_) => null);
+
       final activeNotifications = await flutterLocalNotificationsPlugin
           .getActiveNotifications();
       activeNotifications.removeWhere(
@@ -164,6 +186,58 @@ Future<void> _tryPushHelper(
     }
     return;
   }
+
+  await client.ensureNotSoftLoggedOut();
+
+  Logs().v('Load room...', roomId);
+  var room =
+      client.getRoomById(roomId) ??
+      await client.database.getSingleRoom(client, roomId);
+  if (room == null) {
+    Logs().v('Wait for one sync to get unknown room...', roomId);
+    await client
+        .oneShotSync()
+        .timeout(const Duration(seconds: 8))
+        .catchError((_) => null);
+    room =
+        client.getRoomById(roomId) ??
+        Room(id: roomId, client: client, membership: Membership.invite);
+  }
+
+  Logs().v('Load event...', eventId);
+  var event = room.membership == Membership.join
+      ? await room
+            .getEventById(eventId)
+            .timeout(const Duration(seconds: 8))
+            .catchError((_) => null)
+      : Event(
+          eventId: eventId,
+          room: room,
+          type: EventTypes.RoomMember,
+          stateKey: client.userID,
+          senderId: client.userID!,
+          originServerTs: DateTime.now(),
+          content: {'membership': 'invite'},
+        );
+  if (event == null || event.messageType == MessageTypes.BadEncrypted) {
+    Logs().v('Wait for one sync to decrypt event...');
+    await client
+        .oneShotSync()
+        .timeout(const Duration(seconds: 8))
+        .catchError((_) => null);
+    event =
+        await client.database.getEventById(eventId, room) ??
+        Event(
+          eventId: eventId,
+          room: room,
+          type: EventTypes.RoomMember,
+          stateKey: client.userID,
+          senderId: client.userID!,
+          originServerTs: DateTime.now(),
+          content: {'membership': 'invite'},
+        );
+  }
+
   Logs().v('Push helper got notification event of type ${event.type}.');
 
   if (!client.pushruleEvaluator.match(event).notify) {
@@ -306,7 +380,7 @@ Future<void> _tryPushHelper(
     importance: Importance.high,
     priority: Priority.max,
     groupKey: client.clientName,
-    actions: event.type == EventTypes.RoomMember || !useNotificationActions
+    actions: event.type == EventTypes.RoomMember
         ? null
         : <AndroidNotificationAction>[
             AndroidNotificationAction(
@@ -331,7 +405,8 @@ Future<void> _tryPushHelper(
           ],
   );
   final iOSPlatformChannelSpecifics = DarwinNotificationDetails(
-    threadIdentifier: event.room.id,
+    threadIdentifier: '${notification.clientName}_${notification.roomId}',
+    attachments: await _getIosAttachmentPath(client, event.room.avatar),
   );
   final platformChannelSpecifics = NotificationDetails(
     android: androidPlatformChannelSpecifics,
@@ -347,7 +422,7 @@ Future<void> _tryPushHelper(
   final needsTitleAndBody = !PlatformInfos.isAndroid;
 
   await flutterLocalNotificationsPlugin.show(
-    id: id,
+    id: notification.notificationId,
     title: needsTitleAndBody ? title : null,
     body: needsTitleAndBody ? body : null,
     notificationDetails: platformChannelSpecifics,
@@ -480,4 +555,40 @@ extension on Client {
       return null;
     }
   }
+}
+
+extension on PushNotification {
+  String? get clientName =>
+      devices?.firstOrNull?.data?.tryGet<String>('client_name');
+  int get notificationId {
+    final roomId = this.roomId;
+    if (roomId == null) return 0;
+    final clientName = this.clientName;
+    if (clientName == null) return roomId.hashCode;
+    return '${clientName}_$roomId'.hashCode;
+  }
+}
+
+/// Keep in sync with `createAttachment()` in iOS Notification Extension
+Future<List<DarwinNotificationAttachment>?> _getIosAttachmentPath(
+  Client client,
+  Uri? roomAvatar,
+) async {
+  if (roomAvatar == null) return null;
+
+  final directory = await getFileStorageLocation();
+  if (directory == null) return null;
+
+  final host = roomAvatar.host.replaceAll('.', '_');
+  final rawPath = roomAvatar.pathSegments.join('_');
+  final fileName = 'notification_${host}_$rawPath.jpg';
+  final cachedFile = File(path.join(directory.path, fileName));
+
+  if (!await cachedFile.exists()) {
+    final bytes = await client.tryDownloadNotificationAvatar(roomAvatar);
+    if (bytes == null) return null;
+    await cachedFile.writeAsBytes(bytes);
+  }
+
+  return [DarwinNotificationAttachment(cachedFile.path, identifier: 'image')];
 }
