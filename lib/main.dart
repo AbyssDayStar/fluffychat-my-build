@@ -3,19 +3,21 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
 import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:fluffychat/config/app_config.dart';
 import 'package:fluffychat/utils/client_manager.dart';
+import 'package:fluffychat/utils/error_reporter.dart';
 import 'package:fluffychat/utils/notification_background_handler.dart';
 import 'package:fluffychat/utils/platform_infos.dart';
 import 'package:fluffychat/utils/start_push_foreground_service.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_vodozemac/flutter_vodozemac.dart' as vod;
+import 'package:material_ui/material_ui.dart';
 import 'package:matrix/matrix.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_html/universal_html.dart' as web;
@@ -30,7 +32,14 @@ bool _vodozemacInitialized = false;
 
 bool isIntegrationTest = false;
 
-void main(List<String> args) async {
+void main(List<String> args) => runZonedGuarded(() async {
+  // Forward Flutter errors to global error reporter
+  FlutterError.onError = kDebugMode
+      ? FlutterError.dumpErrorToConsole
+      : (details) => Zone.current.handleUncaughtError(
+          details.exception,
+          details.stack ?? StackTrace.current,
+        );
   isIntegrationTest = args.singleOrNull == 'integration_test';
   if (PlatformInfos.isAndroid) {
     final port = mainIsolateReceivePort = ReceivePort();
@@ -58,6 +67,8 @@ void main(List<String> args) async {
   final store = await AppSettings.init();
   Logs().i('Welcome to ${AppSettings.applicationName.value} <3');
 
+  kEnableMatrixSdkBenchmarks = AppSettings.benchmarksInLogs.value;
+
   if (!_vodozemacInitialized) {
     await vod.init(wasmPath: './assets/assets/vodozemac/');
     _vodozemacInitialized = true;
@@ -70,7 +81,7 @@ void main(List<String> args) async {
   // currently only supported on Android.
   if (PlatformInfos.isAndroid &&
       AppLifecycleState.detached == WidgetsBinding.instance.lifecycleState) {
-    await startPushForegroundService();
+    await ForegroundServices.startService('background_push');
 
     final clients = await ClientManager.getClients(store: store);
 
@@ -98,7 +109,7 @@ void main(List<String> args) async {
     '${AppSettings.applicationName.value} started in foreground mode. Rendering GUI...',
   );
   await startGui(clients, store);
-}
+}, ErrorReporter.onFlutterError);
 
 /// Fetch the pincode for the applock and start the flutter engine.
 Future<void> startGui(List<Client> clients, SharedPreferences store) async {

@@ -17,9 +17,9 @@ import 'package:fluffychat/main.dart';
 import 'package:fluffychat/utils/notification_background_handler.dart';
 import 'package:fluffychat/utils/push_helper.dart';
 import 'package:fluffychat/widgets/fluffy_chat_app.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
+import 'package:material_ui/material_ui.dart';
 import 'package:matrix/matrix.dart';
 import 'package:unifiedpush/unifiedpush.dart';
 import 'package:unifiedpush_ui/unifiedpush_ui.dart';
@@ -35,10 +35,12 @@ class BackgroundPush {
       FlutterLocalNotificationsPlugin();
 
   List<Client> _clients;
+
   List<Client> get clients => matrix?.widget.clients ?? _clients;
 
   MatrixState? matrix;
   String? _fcmToken;
+
   String? get fcmToken => _fcmToken;
   void Function(String errorMsg, {Uri? link})? onFcmError;
   L10n? l10n;
@@ -266,11 +268,9 @@ class BackgroundPush {
 
   static bool _wentToRoomOnStartup = false;
 
-  Future<void> setupPush() async {
-    final context = matrix?.context;
+  Future<void> setupPush(BuildContext context) async {
     if (PlatformInfos.isAndroid &&
         (await UnifiedPush.getDistributors()).isNotEmpty &&
-        context != null &&
         context.mounted) {
       await UnifiedPushUi(
         context: context,

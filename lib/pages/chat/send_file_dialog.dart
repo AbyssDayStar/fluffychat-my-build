@@ -9,6 +9,7 @@ import 'dart:ui' as ui;
 import 'package:async/async.dart' show Result;
 import 'package:crop_image/crop_image.dart';
 import 'package:cross_file/cross_file.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:fluffychat/config/app_config.dart';
 import 'package:fluffychat/l10n/l10n.dart';
 import 'package:fluffychat/pages/chat/image_edit_geometry.dart';
@@ -18,11 +19,10 @@ import 'package:fluffychat/utils/other_party_can_receive.dart';
 import 'package:fluffychat/utils/platform_infos.dart';
 import 'package:fluffychat/utils/show_scaffold_dialog.dart';
 import 'package:fluffychat/utils/size_string.dart';
+import 'package:fluffychat/utils/start_push_foreground_service.dart';
 import 'package:fluffychat/widgets/adaptive_dialogs/adaptive_dialog_action.dart';
 import 'package:fluffychat/widgets/adaptive_dialogs/dialog_text_field.dart';
-import 'package:fluffychat/widgets/future_loading_dialog.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:matrix/matrix.dart' hide Result;
 import 'package:mime/mime.dart';
 
@@ -84,20 +84,27 @@ class SendFileDialogState extends State<SendFileDialog> {
 
   Future<void> _send(String? uniqueFileType) async {
     final l10n = L10n.of(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
 
     final proceed = await showTrustUserInRoomDialog(context, widget.room);
     if (!context.mounted || !proceed) return;
 
-    Future<void> sendAction(setProgress) async {
+    if (ForegroundServices.platformSupported) {
+      await ForegroundServices.startService('send_files');
+    } else {
+      scaffoldMessenger.showLoadingSnackBar(
+        l10n.sendingFilesDoNotExit(widget.files.length),
+      );
+    }
+    try {
       if (!widget.room.otherPartyCanReceiveMessages) {
         throw OtherPartyCanNotReceiveMessages();
       }
+      if (!mounted) return;
       Navigator.of(context, rootNavigator: false).pop();
       final clientConfig = await Result.capture(widget.room.client.getConfig());
       final maxUploadSize =
           clientConfig.asValue?.value.mUploadSize ?? 100 * 1000 * 1000;
-
-      var sentFiles = 0;
 
       for (var i = 0; i < _files.length; i++) {
         final xfile = _files[i];
@@ -109,7 +116,6 @@ class SendFileDialogState extends State<SendFileDialog> {
         if (PlatformInfos.isMobile &&
             mimeType != null &&
             mimeType.startsWith('video')) {
-          setProgress(sentFiles / _files.length + 0.2);
           thumbnail = await xfile.getVideoThumbnail();
         }
 
@@ -117,12 +123,19 @@ class SendFileDialogState extends State<SendFileDialog> {
         if (PlatformInfos.isMobile &&
             mimeType != null &&
             mimeType.startsWith('video')) {
-          setProgress(sentFiles / _files.length + 0.2);
           final lengthResult = await Result.capture(xfile.length());
           final length = lengthResult.asValue?.value;
+          scaffoldMessenger.clearSnackBars();
+          scaffoldMessenger.showLoadingSnackBar(l10n.compressingVideo);
           file = await xfile.getVideoInfo(
             compress: length != null && length > minSizeToCompress && compress,
           );
+          scaffoldMessenger.clearSnackBars();
+          if (!ForegroundServices.platformSupported) {
+            scaffoldMessenger.showLoadingSnackBar(
+              l10n.sendingFilesDoNotExit(widget.files.length),
+            );
+          }
         } else {
           // Else we just create a MatrixFile
           file = MatrixFile(
@@ -134,10 +147,6 @@ class SendFileDialogState extends State<SendFileDialog> {
 
         if (file.bytes.length > maxUploadSize) {
           throw FileTooBigMatrixException(file.bytes.length, maxUploadSize);
-        }
-
-        if (_files.length > 1) {
-          setProgress(sentFiles / _files.length + 0.4);
         }
 
         final label = _labelTextController.text.trim();
@@ -160,7 +169,6 @@ class SendFileDialogState extends State<SendFileDialog> {
             milliseconds: retryAfterMs + 1000,
           );
 
-          setProgress(sentFiles / _files.length + 0.2);
           await Future.delayed(retryAfterDuration);
 
           await widget.room.sendFileEvent(
@@ -170,18 +178,13 @@ class SendFileDialogState extends State<SendFileDialog> {
             extraContent: label.isEmpty ? null : {'body': label},
           );
         }
-        sentFiles++;
       }
-    }
-
-    if (_files.length == 1 && !(uniqueFileType == 'video' && compress)) {
-      await sendAction((_) {});
-    } else {
-      showFutureLoadingDialog(
-        context: widget.outerContext,
-        title: l10n.sendingAttachment,
-        futureWithProgress: sendAction,
-      );
+    } finally {
+      if (ForegroundServices.platformSupported) {
+        await ForegroundServices.stopService('send_files');
+      } else {
+        scaffoldMessenger.clearSnackBars();
+      }
     }
 
     return;
@@ -928,6 +931,27 @@ class _ImageEditPageState extends State<_ImageEditPage> {
             ),
     );
   }
+}
+
+extension on ScaffoldMessengerState {
+  void showLoadingSnackBar(String title) => showSnackBar(
+    SnackBar(
+      persist: true,
+      content: Row(
+        spacing: 8,
+        children: [
+          Expanded(child: Text(title, overflow: .ellipsis, maxLines: 1)),
+          SizedBox.square(
+            dimension: 16,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: Theme.of(context).colorScheme.onInverseSurface,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 /// Freehand drawing surface with pinch-to-zoom.

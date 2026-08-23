@@ -8,7 +8,6 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:desktop_drop/desktop_drop.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluffychat/config/setting_keys.dart';
@@ -23,13 +22,13 @@ import 'package:fluffychat/pages/chat_details/chat_details.dart';
 import 'package:fluffychat/utils/adaptive_bottom_sheet.dart';
 import 'package:fluffychat/utils/error_reporter.dart';
 import 'package:fluffychat/utils/file_selector.dart';
+import 'package:fluffychat/utils/matrix_live_kit_calls/matrix_live_kit_call.dart';
 import 'package:fluffychat/utils/matrix_sdk_extensions/event_extension.dart';
 import 'package:fluffychat/utils/matrix_sdk_extensions/filtered_timeline_extension.dart';
 import 'package:fluffychat/utils/matrix_sdk_extensions/matrix_locals.dart';
 import 'package:fluffychat/utils/other_party_can_receive.dart';
 import 'package:fluffychat/utils/platform_infos.dart';
 import 'package:fluffychat/utils/show_scaffold_dialog.dart';
-import 'package:fluffychat/widgets/adaptive_dialogs/show_modal_action_popup.dart';
 import 'package:fluffychat/widgets/adaptive_dialogs/show_ok_cancel_alert_dialog.dart';
 import 'package:fluffychat/widgets/adaptive_dialogs/show_text_input_dialog.dart';
 import 'package:fluffychat/widgets/future_loading_dialog.dart';
@@ -37,10 +36,10 @@ import 'package:fluffychat/widgets/matrix.dart';
 import 'package:fluffychat/widgets/mxc_image.dart';
 import 'package:fluffychat/widgets/share_scaffold_dialog.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:matrix/matrix.dart';
 import 'package:mime/mime.dart';
 import 'package:pasteboard/pasteboard.dart';
@@ -56,17 +55,22 @@ class ChatPage extends StatelessWidget {
   final String roomId;
   final List<ShareItem>? shareItems;
   final String? eventId;
+  final Timeline? timeline;
+  final String? action;
 
   const ChatPage({
     super.key,
     required this.roomId,
     this.eventId,
     this.shareItems,
+    this.timeline,
+    this.action,
   });
 
   @override
   Widget build(BuildContext context) {
-    final room = Matrix.of(context).client.getRoomById(roomId);
+    final room =
+        timeline?.room ?? Matrix.of(context).client.getRoomById(roomId);
     if (room == null) {
       return Scaffold(
         appBar: AppBar(title: Text(L10n.of(context).oopsSomethingWentWrong)),
@@ -84,6 +88,8 @@ class ChatPage extends StatelessWidget {
       room: room,
       shareItems: shareItems,
       eventId: eventId,
+      timeline: timeline,
+      action: action,
     );
   }
 }
@@ -92,12 +98,16 @@ class ChatPageWithRoom extends StatefulWidget {
   final Room room;
   final List<ShareItem>? shareItems;
   final String? eventId;
+  final Timeline? timeline;
+  final String? action;
 
   const ChatPageWithRoom({
     super.key,
     required this.room,
     this.shareItems,
     this.eventId,
+    this.timeline,
+    this.action,
   });
 
   @override
@@ -280,7 +290,7 @@ class ChatController extends State<ChatPageWithRoom>
     }
   }
 
-  Future<void> _shareItems([_]) async {
+  Future<void> _shareItems() async {
     final shareItems = widget.shareItems;
     if (shareItems == null || shareItems.isEmpty) return;
     if (!room.otherPartyCanReceiveMessages) {
@@ -388,8 +398,15 @@ class ChatController extends State<ChatPageWithRoom>
     inputFocus.addListener(_inputFocusListener);
 
     _loadDraft();
-    WidgetsBinding.instance.addPostFrameCallback(_shareItems);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _shareItems();
+      _checkMatrixRtcCallSupport();
+      if (widget.action == 'call') {
+        Matrix.of(context).activeCallRoomId.value = room.id;
+      }
+    });
     web.window.addEventListener('paste', _handleClipboardFilePasteWeb);
+
     super.initState();
     _displayChatDetailsColumn = ValueNotifier(
       AppSettings.displayChatDetailsColumn.value,
@@ -413,6 +430,18 @@ class ChatController extends State<ChatPageWithRoom>
         : '';
     WidgetsBinding.instance.addObserver(this);
     _tryLoadTimeline();
+  }
+
+  Future<void> _checkMatrixRtcCallSupport() async {
+    try {
+      final urls = await room.client.getLiveKitServiceUrls();
+      if (urls.isEmpty) return;
+      setState(() {
+        supportLiveKitCalls = true;
+      });
+    } catch (e) {
+      Logs().d('Unable to check MatrixRTC call support', e);
+    }
   }
 
   final Set<String> expandedEventIds = {};
@@ -525,11 +554,13 @@ class ChatController extends State<ChatPageWithRoom>
     }
     try {
       timeline?.cancelSubscriptions();
-      timeline = await room.getTimeline(
-        onUpdate: updateView,
-        onInsert: _insert,
-        eventContextId: eventContextId,
-      );
+      timeline =
+          widget.timeline ??
+          await room.getTimeline(
+            onUpdate: updateView,
+            onInsert: _insert,
+            eventContextId: eventContextId,
+          );
     } catch (e, s) {
       Logs().w('Unable to load timeline on event ID $eventContextId', e, s);
       if (!mounted) return;
@@ -578,9 +609,14 @@ class ChatController extends State<ChatPageWithRoom>
     final setOnLatestEvent = eventId == null;
     eventId ??= timeline.events
         .firstWhereOrNull(
-          (event) =>
-              room.client.pushruleEvaluator.match(event).notify &&
-              event.eventId.isValidMatrixIdStrict(),
+          (event) => room.pushRuleState == PushRuleState.notify
+              ? room.client.pushruleEvaluator.match(event).notify
+              : {
+                      EventTypes.Message,
+                      EventTypes.Encrypted,
+                      EventTypes.Sticker,
+                    }.contains(event.type) &&
+                    event.eventId.isValidMatrixIdStrict(),
         )
         ?.eventId;
 
@@ -1522,54 +1558,6 @@ class ChatController extends State<ChatPageWithRoom>
   void showEventInfo([Event? event]) =>
       (event ?? selectedEvents.single).showInfoDialog(context);
 
-  Future<void> onPhoneButtonTap() async {
-    // VoIP required Android SDK 21
-    if (PlatformInfos.isAndroid) {
-      final androidInfo = await DeviceInfoPlugin().androidInfo;
-      if (!mounted) return;
-      if (androidInfo.version.sdkInt < 21) {
-        Navigator.pop(context);
-        await showOkAlertDialog(
-          context: context,
-          title: L10n.of(context).unsupportedAndroidVersion,
-          message: L10n.of(context).unsupportedAndroidVersionLong,
-          okLabel: L10n.of(context).close,
-        );
-        return;
-      }
-    }
-    final callType = await showModalActionPopup<CallType>(
-      context: context,
-      title: L10n.of(context).warning,
-      message: L10n.of(context).videoCallsBetaWarning,
-      cancelLabel: L10n.of(context).cancel,
-      actions: [
-        AdaptiveModalAction(
-          label: L10n.of(context).voiceCall,
-          icon: const Icon(Icons.phone_outlined),
-          value: CallType.kVoice,
-        ),
-        AdaptiveModalAction(
-          label: L10n.of(context).videoCall,
-          icon: const Icon(Icons.video_call_outlined),
-          value: CallType.kVideo,
-        ),
-      ],
-    );
-    if (callType == null) return;
-    if (!mounted) return;
-
-    final voipPlugin = Matrix.of(context).voipPlugin;
-    try {
-      await voipPlugin!.voip.inviteToCall(room, callType);
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toLocalizedString(context))));
-    }
-  }
-
   void cancelReplyEventAction() => setState(() {
     if (editEvent != null) {
       sendController.text = pendingText;
@@ -1578,6 +1566,12 @@ class ChatController extends State<ChatPageWithRoom>
     replyEvent = null;
     editEvent = null;
   });
+
+  void startOrJoinVideoCall() {
+    Matrix.of(context).activeCallRoomId.value = room.id;
+  }
+
+  bool supportLiveKitCalls = false;
 
   Future<void> _cancelEditWithConfirmation() async {
     final originalText = editEvent!
