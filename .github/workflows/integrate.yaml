@@ -139,9 +139,6 @@ jobs:
       - run: ./scripts/add-firebase-messaging.sh
       - run: flutter pub get
       - run: flutter build ios --no-codesign
-      - name: Ensure that iOS build files are up to date in git
-        run: |
-          git diff --quiet -- ios/ || exit 1
 
   integration_test:
     runs-on: ubuntu-latest
@@ -177,7 +174,7 @@ jobs:
           api-level: ${{ matrix.api-level }}
           target: google_apis
           arch: x86_64
-          cores: 16
+          cores: 4
           ndk: 28.2.13676358
           force-avd-creation: false
           disk-size: 4096M

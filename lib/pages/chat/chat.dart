@@ -84,7 +84,7 @@ class ChatPage extends StatelessWidget {
     }
 
     return ChatPageWithRoom(
-      key: Key('chat_page_${roomId}_$eventId'),
+      key: Key('chat_page_${roomId}_${eventId}_$action'),
       room: room,
       shareItems: shareItems,
       eventId: eventId,
@@ -606,6 +606,13 @@ class ChatController extends State<ChatPageWithRoom>
     final timeline = this.timeline;
     if (timeline == null || timeline.events.isEmpty) return;
 
+    // Do not set read marker on rtc notification while call is active. This
+    // mutes callkit.
+    if (room.hasActiveMatrixRtcCall &&
+        timeline.events.first.type == RtcNotificationContent.eventType) {
+      return;
+    }
+
     final setOnLatestEvent = eventId == null;
     eventId ??= timeline.events
         .firstWhereOrNull(
@@ -627,7 +634,7 @@ class ChatController extends State<ChatPageWithRoom>
     if (eventId.isValidMatrixIdStrict() == false) return;
 
     // Already set a read marker on this event
-    if (room.fullyRead == eventId) return;
+    if (room.fullyRead == eventId && !setOnLatestEvent) return;
 
     // Set a readmarker on a specific event, not latest, but room is not unread
     // at all.
@@ -1420,11 +1427,8 @@ class ChatController extends State<ChatPageWithRoom>
     room.client.getConfig();
 
     switch (choice) {
-      case AddPopupMenuActions.image:
-        sendFileAction(type: FileType.image);
-        return;
-      case AddPopupMenuActions.video:
-        sendFileAction(type: FileType.video);
+      case AddPopupMenuActions.media:
+        sendFileAction(type: FileType.media);
         return;
       case AddPopupMenuActions.file:
         sendFileAction();
@@ -1651,8 +1655,7 @@ class ChatController extends State<ChatPageWithRoom>
 }
 
 enum AddPopupMenuActions {
-  image,
-  video,
+  media,
   file,
   poll,
   photoCamera,

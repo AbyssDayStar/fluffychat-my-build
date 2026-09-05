@@ -45,6 +45,13 @@ extension MatrixRtcClientExtension on Client {
 extension MatrixRtcRoomExtension on Room {
   bool get hasActiveMatrixRtcCall => getActiveMatrixRtcMembers().isNotEmpty;
 
+  MatrixRtcCallIntent? get activeMatrixRtcCallIntent {
+    final members = getActiveMatrixRtcMembers();
+    if (members.isEmpty) return null;
+    if (members.any((member) => member.callIntent == .video)) return .video;
+    return .voice;
+  }
+
   bool get hasPermissionForMatrixRtcCall =>
       canChangeStateEvent(MatrixRtcCallMember.eventType);
 
@@ -56,7 +63,10 @@ extension MatrixRtcRoomExtension on Room {
       if (event.content.isEmpty) return false;
       if (event is! Event) return false;
       try {
-        final validContent = MatrixRtcCallMember.fromJson(event.content);
+        final validContent = MatrixRtcCallMember.fromJson(
+          event.content,
+          senderId: event.senderId,
+        );
         if (validContent.focusActive?.type != 'livekit') return false;
         final expiresAt = (validContent.createdAt ?? event.originServerTs).add(
           validContent.expires,
@@ -69,7 +79,12 @@ extension MatrixRtcRoomExtension on Room {
       }
     });
     return activeMemberStates
-        .map((state) => MatrixRtcCallMember.fromJson(state.content))
+        .map(
+          (state) => MatrixRtcCallMember.fromJson(
+            state.content,
+            senderId: state.senderId,
+          ),
+        )
         .toList();
   }
 
@@ -83,7 +98,10 @@ extension MatrixRtcRoomExtension on Room {
     );
     if (state == null || state.content.isEmpty) return null;
     try {
-      return MatrixRtcCallMember.fromJson(state.content);
+      return MatrixRtcCallMember.fromJson(
+        state.content,
+        senderId: state.senderId,
+      );
     } catch (e, s) {
       Logs().d(
         'Unknown format for ${MatrixRtcCallMember.eventType} event',
@@ -95,7 +113,7 @@ extension MatrixRtcRoomExtension on Room {
   }
 
   Future<void> setMatrixRtcMembershipState(
-    final List<MatrixRtcFocusPreferred> fociPreferred, {
+    List<MatrixRtcFocusPreferred> fociPreferred, {
     MatrixRtcCallIntent intent = MatrixRtcCallIntent.video,
   }) => client.setRoomStateWithKey(
     id,
@@ -112,9 +130,10 @@ extension MatrixRtcRoomExtension on Room {
         focusSelection: 'oldest_membership',
         type: 'livekit',
       ),
-      callIntent: intent.name,
+      callIntent: intent,
       membershipId: '${client.userID}:${client.deviceID}',
       scope: 'm.room',
+      senderId: null,
     ).toJson(),
   );
 
@@ -123,13 +142,7 @@ extension MatrixRtcRoomExtension on Room {
     Timeline timeline,
   ) {
     final stateEvent =
-        states[MatrixRtcCallMember.eventType]?.entries
-                .lastWhereOrNull(
-                  (entry) =>
-                      entry.key.startsWith('_${matrixId}_') &&
-                      entry.key.endsWith('_m.call'),
-                )
-                ?.value
+        states[MatrixRtcCallMember.eventType]?[_ownMatrixRtcMembershipStateKey]
             as Event?;
     if (stateEvent == null) return false;
     final aggregatedEvents = timeline
@@ -192,6 +205,14 @@ extension MatrixRtcRoomExtension on Room {
       deviceKeys.map((key) => '${key.userId}:${key.deviceId}'),
     );
 
+    final doNotEncryptTo = deviceKeys.where((d) => !d.encryptToDevice);
+    if (doNotEncryptTo.isNotEmpty) {
+      Logs().w(
+        'Not sharing keys with ${doNotEncryptTo.length} device(s) because of key sharing restrictions!',
+      );
+      deviceKeys.removeWhere((d) => !d.encryptToDevice);
+    }
+
     await client.sendToDeviceEncrypted(
       deviceKeys,
       CallKeysEventContent.eventType,
@@ -219,22 +240,24 @@ extension MatrixRtcRoomExtension on Room {
       );
     }
     Logs().d('[Join MatrixRtc Call] (1/5) Get LiveKit Backend Urls...');
-    final urls = await client.getLiveKitServiceUrls();
 
-    final memberUrls =
-        states[MatrixRtcCallMember.eventType]?.values
-            .map(
-              (state) => MatrixRtcCallMember.fromJson(
-                state.content,
-              ).fociPreferred.map((focus) => focus.livekitServiceUrl),
-            )
-            .fold<List<String>>([], (urls, foci) => [...urls, ...foci]) ??
-        [];
-    urls.addAll(memberUrls);
+    final hasActiveMatrixRtcCall = this.hasActiveMatrixRtcCall;
+
+    final urls = getActiveMatrixRtcMembers()
+        .map(
+          (state) =>
+              state.fociPreferred.map((focus) => focus.livekitServiceUrl),
+        )
+        .fold<List<String>>([], (urls, foci) => [...urls, ...foci]);
+
+    if (urls.isEmpty) {
+      urls.addAll(await client.getLiveKitServiceUrls());
+    }
+
+    Logs().v('Available SFUs', urls);
     if (urls.isEmpty) {
       throw Exception('This server does not support livekit calls!');
     }
-    final hasActiveMatrixRtcCall = this.hasActiveMatrixRtcCall;
 
     Logs().d(
       '[Join MatrixRtc Call] (2/5) Set "${MatrixRtcCallMember.eventType}" State event...',
@@ -286,6 +309,7 @@ extension MatrixRtcRoomExtension on Room {
         }
         final json =
             jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, Object?>;
+        Logs().d('Use SFU', url);
         return MatrixRtcCredentials.fromJson(json);
       } catch (e) {
         Logs().v(
@@ -320,7 +344,7 @@ class MatrixRtcCredentials {
 }
 
 enum MatrixRtcCallIntent {
-  audio(callKitType: 0),
+  voice(callKitType: 0),
   video(callKitType: 1);
 
   final int callKitType;

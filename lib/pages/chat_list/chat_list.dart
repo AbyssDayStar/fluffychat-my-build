@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:fluffychat/config/app_config.dart';
+import 'package:fluffychat/config/themes.dart';
 import 'package:fluffychat/l10n/l10n.dart';
 import 'package:fluffychat/pages/chat_list/chat_list_view.dart';
 import 'package:fluffychat/utils/error_reporter.dart';
@@ -89,6 +90,11 @@ class ChatListController extends State<ChatList>
 
   Future<void> setActiveSpace(String spaceId) async {
     await Matrix.of(context).client.getRoomById(spaceId)!.postLoad();
+    if (!mounted) return;
+    if (!FluffyThemes.isColumnMode(context) &&
+        !AppSettings.displayNavigationRail.value) {
+      await AppSettings.displayNavigationRail.setItem(true);
+    }
 
     setState(() {
       _activeSpaceId = spaceId;
@@ -410,14 +416,16 @@ class ChatListController extends State<ChatList>
 
     scrollController.addListener(_onScroll);
     _waitForFirstSync();
-    _callEventSubscription = FlutterCallkitIncoming.onEvent.listen(
-      _onCallEvent,
-    );
-    FlutterCallkitIncoming.activeCalls().then((calls) {
-      final params = calls.firstOrNull;
-      if (params == null) return;
-      _joinCallWith(params);
-    });
+    if (PlatformInfos.isMobile) {
+      _callEventSubscription = FlutterCallkitIncoming.onEvent.listen(
+        _onCallEvent,
+      );
+      FlutterCallkitIncoming.activeCalls().then((calls) {
+        final params = calls.firstOrNull;
+        if (params == null) return;
+        _joinCallWith(params);
+      });
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {

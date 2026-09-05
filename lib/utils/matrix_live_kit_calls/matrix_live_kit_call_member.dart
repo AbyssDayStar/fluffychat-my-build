@@ -3,6 +3,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'package:collection/collection.dart';
+import 'package:fluffychat/utils/matrix_live_kit_calls/matrix_live_kit_call.dart';
 import 'package:matrix/matrix_api_lite/utils/try_get_map_extension.dart';
 
 class MatrixRtcCallMember {
@@ -15,9 +17,12 @@ class MatrixRtcCallMember {
   final Duration expires;
   final List<MatrixRtcFocusPreferred> fociPreferred;
   final MatrixRtcFocusActive? focusActive;
-  final String callIntent;
+  final MatrixRtcCallIntent callIntent;
   final String? membershipId;
   final String scope;
+
+  /// Not part of JSON content but for convenience
+  final String? senderId;
 
   const MatrixRtcCallMember({
     required this.application,
@@ -30,38 +35,44 @@ class MatrixRtcCallMember {
     required this.membershipId,
     required this.scope,
     required this.createdAt,
+    required this.senderId,
   });
 
-  factory MatrixRtcCallMember.fromJson(Map<String, Object?> json) =>
-      MatrixRtcCallMember(
-        application: json.tryGet<String>('application') ?? '',
-        callId: json.tryGet<String>('call_id') ?? '',
-        deviceId: json.tryGet<String>('device_id'),
-        createdAt: json.tryGet<int>('created_at') == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(
-                json.tryGet<int>('created_at')!,
+  factory MatrixRtcCallMember.fromJson(
+    Map<String, Object?> json, {
+    required String? senderId,
+  }) => MatrixRtcCallMember(
+    application: json.tryGet<String>('application') ?? '',
+    callId: json.tryGet<String>('call_id') ?? '',
+    deviceId: json.tryGet<String>('device_id'),
+    createdAt: json.tryGet<int>('created_at') == null
+        ? null
+        : DateTime.fromMillisecondsSinceEpoch(json.tryGet<int>('created_at')!),
+    expires: Duration(milliseconds: json.tryGet<int>('expires') ?? 0),
+    fociPreferred:
+        (json['foci_preferred'] as List?)
+            ?.whereType<Map>()
+            .map(
+              (e) => MatrixRtcFocusPreferred.fromJson(
+                Map<String, Object?>.from(e),
               ),
-        expires: Duration(milliseconds: json.tryGet<int>('expires') ?? 0),
-        fociPreferred:
-            (json['foci_preferred'] as List?)
-                ?.whereType<Map>()
-                .map(
-                  (e) => MatrixRtcFocusPreferred.fromJson(
-                    Map<String, Object?>.from(e),
-                  ),
-                )
-                .toList() ??
-            [],
-        focusActive: json['focus_active'] is Map
-            ? MatrixRtcFocusActive.fromJson(
-                Map<String, Object?>.from(json['focus_active'] as Map),
-              )
-            : null,
-        callIntent: json.tryGet<String>('m.call.intent') ?? 'video',
-        membershipId: json.tryGet<String>('membershipID'),
-        scope: json.tryGet<String>('scope') ?? 'm.room',
-      );
+            )
+            .toList() ??
+        [],
+    focusActive: json['focus_active'] is Map
+        ? MatrixRtcFocusActive.fromJson(
+            Map<String, Object?>.from(json['focus_active'] as Map),
+          )
+        : null,
+    callIntent:
+        MatrixRtcCallIntent.values.singleWhereOrNull(
+          (intent) => intent.name == json.tryGet<String>('m.call.intent'),
+        ) ??
+        MatrixRtcCallIntent.video,
+    membershipId: json.tryGet<String>('membershipID'),
+    scope: json.tryGet<String>('scope') ?? 'm.room',
+    senderId: senderId,
+  );
 
   Map<String, Object?> toJson() => {
     'application': application,
@@ -70,7 +81,7 @@ class MatrixRtcCallMember {
     'expires': expires.inMilliseconds,
     'foci_preferred': fociPreferred.map((f) => f.toJson()).toList(),
     if (focusActive != null) 'focus_active': focusActive!.toJson(),
-    'm.call.intent': callIntent,
+    'm.call.intent': callIntent.name,
     if (membershipId != null) 'membershipID': membershipId,
     'scope': scope,
     'created_at': ?createdAt?.millisecondsSinceEpoch,

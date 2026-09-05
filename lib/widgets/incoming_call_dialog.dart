@@ -3,7 +3,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import 'dart:async';
+
 import 'package:fluffychat/l10n/l10n.dart';
+import 'package:fluffychat/utils/matrix_live_kit_calls/matrix_live_kit_call.dart';
 import 'package:fluffychat/widgets/avatar.dart';
 import 'package:fluffychat/widgets/pulsating_widget.dart';
 import 'package:go_router/go_router.dart';
@@ -22,9 +25,32 @@ class IncomingCallDialog extends StatefulWidget {
 class _IncomingCallDialogState extends State<IncomingCallDialog> {
   final AudioPlayer _player = AudioPlayer();
 
+  StreamSubscription? _onSync;
+
   @override
   void initState() {
     _initAudioPlayer();
+    _onSync = widget.event.room.client.onSync.stream.listen((_) {
+      if (!mounted) return;
+      if (!widget.event.room.hasActiveMatrixRtcCall) {
+        Logs().i('The other party has ended the call');
+        Navigator.of(context).pop();
+      } else if (widget.event.room.getActiveMatrixRtcMembers().any(
+        (member) =>
+            member.senderId == widget.event.room.client.userID! &&
+            member.deviceId != widget.event.room.client.deviceID!,
+      )) {
+        Logs().i('User has accepted the call on a different device');
+        Navigator.of(context).pop();
+      }
+    });
+    final timeout =
+        widget.event.tryParseRtcNotificationContent()?.lifetime ??
+        RtcNotificationContent.defaultLifetime;
+    Future.delayed(timeout).then((_) {
+      if (!mounted) return;
+      Navigator.of(context).pop();
+    });
     super.initState();
   }
 
@@ -36,6 +62,7 @@ class _IncomingCallDialogState extends State<IncomingCallDialog> {
 
   @override
   void dispose() {
+    _onSync?.cancel();
     _player.stop();
     _player.dispose();
     super.dispose();

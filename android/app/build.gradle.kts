@@ -20,7 +20,7 @@ dependencies {
 // Workaround for https://pub.dev/packages/unifiedpush#the-build-fails-because-of-duplicate-classes
 configurations.all {
     // Use the latest version published: https://central.sonatype.com/artifact/com.google.crypto.tink/tink-android
-    val tink = "com.google.crypto.tink:tink-android:1.17.0"
+    val tink = "com.google.crypto.tink:tink-android:1.23.0"
     // You can also use the library declaration catalog
     // val tink = libs.google.tink
     resolutionStrategy {
@@ -34,7 +34,8 @@ configurations.all {
 
 android {
     namespace = "chat.fluffy.fluffychat"
-    compileSdk = flutter.compileSdkVersion
+    // Workaround for https://github.com/juliansteenbakker/flutter_secure_storage/issues/1224
+    compileSdk = 37 //flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

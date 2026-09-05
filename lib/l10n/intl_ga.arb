@@ -2767,5 +2767,68 @@
     "unifiedPushDistributors": "Dáileoirí Brú Aontaithe:",
     "doubleTapToReact": "Tapáil faoi dhó le freagairt",
     "doubleTapToReactDescription": "Tapáil faoi dhó ar theachtaireacht le freagairt in ionad téacs a roghnú",
-    "doubleTapReaction": "Imoibriú tapála faoi dhó"
+    "doubleTapReaction": "Imoibriú tapála faoi dhó",
+    "sendingFilesDoNotExit": "Ag seoladh {count} comhad... Ná scoir le do thoil!",
+    "@sendingFilesDoNotExit": {
+        "type": "String",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "compressingVideo": "Ag comhbhrú físeáin...",
+    "shareCrashReports": "Comhroinn tuairiscí tuairteála",
+    "shareCrashReportsDescription": "An bhfuil tú ag iarraidh tuairiscí tuairteála a roinnt go huathoibríoch leis na forbróirí?",
+    "countActiveCallMembers": "{count} baill ghníomhacha glaonna",
+    "@countActiveCallMembers": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "enterCall": "Cuir isteach glao",
+    "videoCallsBetaWarning": "Is gné béite iad glaonna físe. D’fhéadfadh fabhtanna nó iompraíocht gan choinne a bheith ann. Bheimis sásta d’aiseolas a chloisteáil.",
+    "noDevicesFound": "Níor aimsíodh aon fheistí",
+    "incomingCall": "Glao isteach",
+    "videoCall": "Glao físe",
+    "voiceCall": "Glao gutha",
+    "missedCall": "Glao caillte",
+    "callBack": "Glaoigh ar ais",
+    "hangUp": "Croch suas",
+    "waitingForParticipant": "Ag fanacht leis an rannpháirtí...",
+    "decline": "Diúltaigh",
+    "startCall": "Tosaigh glao",
+    "selectCamera": "Roghnaigh ceamara",
+    "selectMicrophone": "Roghnaigh micreafón",
+    "selectSpeaker": "Roghnaigh cainteoir",
+    "toggleMicrophone": "Athraigh an micreafón",
+    "toggleCamera": "Ceamara a scoránaigh",
+    "startScreensharing": "Tosaigh ag comhroinnt scáileáin",
+    "stopScreensharing": "Stop comhroinnt scáileáin",
+    "raiseHand": "Ardaigh lámh",
+    "stopRaiseHand": "Stop ag ardú láimhe",
+    "accountsAndSettings": "Cuntais agus socruithe",
+    "@accountsAndSettings": {
+        "type": "String",
+        "placeholders": {}
+    },
+    "preferSpeaker": "Is fearr leat cainteoir",
+    "unexpectedErrorOccurded": "Ar an drochuair, tharla earráid gan choinne: {msg}",
+    "@unexpectedErrorOccurded": {
+        "placeholders": {
+            "msg": {
+                "type": "String"
+            }
+        }
+    },
+    "incomingCallFrom": "Glao isteach ó {user}",
+    "@incomingCallFrom": {
+        "placeholders": {
+            "user": {
+                "type": "String"
+            }
+        }
+    }
 }

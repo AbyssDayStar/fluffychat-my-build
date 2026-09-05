@@ -229,10 +229,20 @@ class ChatView extends StatelessWidget {
                       PulsatingWidget(
                         color: theme.colorScheme.error,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: TextButton.icon(
-                            icon: Icon(Icons.add_ic_call_outlined),
-                            label: Text(L10n.of(context).activeCall),
+                            icon: Icon(switch (controller
+                                .room
+                                .activeMatrixRtcCallIntent) {
+                              .voice => Icons.video_call_outlined,
+                              _ => Icons.mic_outlined,
+                            }),
+                            label: Text(
+                              controller.room
+                                  .getActiveMatrixRtcMembers()
+                                  .length
+                                  .toString(),
+                            ),
                             onPressed:
                                 controller.room.hasPermissionForMatrixRtcCall
                                 ? controller.startOrJoinVideoCall
@@ -368,7 +378,6 @@ class ChatView extends StatelessWidget {
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    theme.colorScheme.surface.withAlpha(0),
                                     theme.colorScheme.surface.withAlpha(0),
                                     theme.colorScheme.surface,
                                     theme.colorScheme.surface,

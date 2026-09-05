@@ -181,7 +181,7 @@ class ClientChooserButton extends StatelessWidget {
         color: Colors.transparent,
         child: PopupMenuButton<Object>(
           key: Key('accounts_and_settings_buttons'),
-          tooltip: 'Accounts and settings',
+          tooltip: L10n.of(context).accountsAndSettings,
           onSelected: (o) => _clientSelected(o, context),
           itemBuilder: _bundleMenuItems,
           icon: Avatar(
@@ -213,7 +213,7 @@ class ClientChooserButton extends StatelessWidget {
           break;
         case SettingsAction.support:
           launchUrlString(
-            'https://fluffychat.im/faq/#how_can_i_support_fluffychat',
+            'https://ko-fi.com/post/How-can-I-support-FluffyChat-J2G325WE6I',
           );
           break;
         case SettingsAction.settings:

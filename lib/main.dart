@@ -17,6 +17,7 @@ import 'package:fluffychat/utils/start_push_foreground_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_vodozemac/flutter_vodozemac.dart' as vod;
+import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:matrix/matrix.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,12 +35,11 @@ bool isIntegrationTest = false;
 
 void main(List<String> args) => runZonedGuarded(() async {
   // Forward Flutter errors to global error reporter
-  FlutterError.onError = kDebugMode
-      ? FlutterError.dumpErrorToConsole
-      : (details) => Zone.current.handleUncaughtError(
-          details.exception,
-          details.stack ?? StackTrace.current,
-        );
+  FlutterError.onError = (details) => Zone.current.handleUncaughtError(
+    details.exception,
+    details.stack ?? StackTrace.current,
+  );
+
   isIntegrationTest = args.singleOrNull == 'integration_test';
   if (PlatformInfos.isAndroid) {
     final port = mainIsolateReceivePort = ReceivePort();
@@ -129,6 +129,10 @@ Future<void> startGui(List<Client> clients, SharedPreferences store) async {
     } catch (e, s) {
       Logs().d('Unable to read PIN from Secure storage', e, s);
     }
+  }
+
+  if (PlatformInfos.isLinux || PlatformInfos.isWindows) {
+    JustAudioMediaKit.ensureInitialized();
   }
 
   // Preload first client

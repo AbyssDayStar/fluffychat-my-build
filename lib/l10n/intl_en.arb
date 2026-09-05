@@ -92,6 +92,11 @@
         "type": "String",
         "placeholders": {}
     },
+    "accountsAndSettings": "Accounts and settings",
+    "@accountsAndSettings": {
+        "type": "String",
+        "placeholders": {}
+    },
     "activatedEndToEndEncryption": "🔐 {username} activated end to end encryption",
     "@activatedEndToEndEncryption": {
         "type": "String",
@@ -2762,18 +2767,7 @@
     "doubleTapToReactDescription": "Double-tap a message to react instead of selecting text",
     "doubleTapReaction": "Double-tap reaction",
     "shareCrashReports": "Share crash reports",
-    "shareCrashReportsDescription": "Automatically share crash reports with the developers",
-    "shareCrashReportsPrompt": "Share crash reports automatically with the developers? Learn more at {url} about what data is being shared.",
-    "@shareCrashReportsPrompt": {
-        "placeholders": {
-            "url": {
-                "type": "String"
-            }
-        }
-    },
-    "allow": "Allow",
-    "deny": "Deny",
-    "activeCall": "Active call",
+    "shareCrashReportsDescription": "Automatically share crash reports with the developers?",
     "countActiveCallMembers": "{count} active call members",
     "@countActiveCallMembers": {
         "placeholders": {
@@ -2786,6 +2780,34 @@
     "videoCallsBetaWarning": "Video calls are a beta feature. There might be bugs or unexpected behavior. We would be happy to hear about your feedback.",
     "noDevicesFound": "No devices found",
     "incomingCall": "Incoming call",
+    "videoCall": "Video call",
+    "voiceCall": "Voice call",
+    "missedCall": "Missed call",
+    "callBack": "Call back",
+    "hangUp": "Hang up",
     "waitingForParticipant": "Waiting for participant...",
-    "decline": "Decline"
+    "decline": "Decline",
+    "startCall": "Start call",
+    "selectCamera": "Select camera",
+    "selectMicrophone": "Select microphone",
+    "selectSpeaker": "Select speaker",
+    "toggleMicrophone": "Toggle microphone",
+    "toggleCamera": "Toggle camera",
+    "startScreensharing": "Start screensharing",
+    "stopScreensharing": "Stop screensharing",
+    "raiseHand": "Raise hand",
+    "stopRaiseHand": "Stop raise hand",
+    "preferSpeaker": "Prefer speaker",
+    "unexpectedErrorOccurded": "Unfortunately, an unexpected error has occurred: {msg}",
+    "@unexpectedErrorOccurded": {
+        "placeholders": {
+            "msg": {"type": "String"}
+        }
+    },
+    "incomingCallFrom": "Incoming call from {user}",
+    "@incomingCallFrom": {
+        "placeholders": {
+            "user": {"type": "String"}
+        }
+    }
 }

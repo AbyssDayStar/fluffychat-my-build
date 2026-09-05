@@ -14,6 +14,7 @@ import 'package:fluffychat/config/setting_keys.dart';
 import 'package:fluffychat/l10n/l10n.dart';
 import 'package:fluffychat/utils/call_kit_params.dart';
 import 'package:fluffychat/utils/client_manager.dart';
+import 'package:fluffychat/utils/matrix_live_kit_calls/matrix_live_kit_call.dart';
 import 'package:fluffychat/utils/matrix_sdk_extensions/matrix_locals.dart';
 import 'package:fluffychat/utils/notification_avatar_extension.dart';
 import 'package:fluffychat/utils/notification_background_handler.dart';
@@ -183,19 +184,7 @@ Future<void> _tryPushHelper(
   if (event.type == RtcNotificationContent.eventType &&
       event.tryParseRtcNotificationContent()?.notificationType == .ring &&
       PlatformInfos.isMobile) {
-    final callId = '${event.room.id}|${event.room.client.clientName}';
-    final activeCalls = await FlutterCallkitIncoming.activeCalls();
-    if (activeCalls.any((call) => call.id == callId)) {
-      Logs().d(
-        'Call with this ID is already active. Ignoring this Push Notification...',
-        callId,
-      );
-      return;
-    }
-    await FlutterCallkitIncoming.showCallkitIncoming(
-      buildFluffyChatCallKitParams(event.room, l10n),
-    );
-
+    _showIncomingCall(event, l10n);
     return;
   }
 
@@ -503,5 +492,56 @@ extension on PushNotification {
     final clientName = this.clientName;
     if (clientName == null) return roomId.hashCode;
     return '${clientName}_$roomId'.hashCode;
+  }
+}
+
+Future<void> _showIncomingCall(Event event, L10n l10n) async {
+  final callId = '${event.room.id}|${event.room.client.clientName}';
+  final activeCalls = await FlutterCallkitIncoming.activeCalls();
+  if (activeCalls.any((call) => call.id == callId)) {
+    Logs().d(
+      'Call with this ID is already active. Ignoring this Push Notification...',
+      callId,
+    );
+    return;
+  }
+  final intentStr = event.content.tryGet<String>('m.call.intent');
+  final intent =
+      MatrixRtcCallIntent.values.singleWhereOrNull(
+        (i) => i.name == intentStr,
+      ) ??
+      .video;
+  final timeout =
+      event.tryParseRtcNotificationContent()?.lifetime ??
+      RtcNotificationContent.defaultLifetime;
+  final params = await buildFluffyChatCallKitParams(
+    event.room,
+    l10n: l10n,
+    intent: intent,
+    timeout: timeout,
+  );
+  final timeoutDateTime = DateTime.now().add(timeout);
+  await FlutterCallkitIncoming.showCallkitIncoming(params);
+
+  while (DateTime.now().isBefore(timeoutDateTime)) {
+    await event.room.client.oneShotSync();
+    if (!event.room.hasActiveMatrixRtcCall) {
+      Logs().i('The other party has ended the call');
+      await FlutterCallkitIncoming.endCall(params.id);
+      break;
+    }
+    if (event.room.ownMatrixRtcMembership != null) {
+      Logs().d('User has joined the call.');
+      break;
+    }
+    if (event.room.getActiveMatrixRtcMembers().any(
+      (member) =>
+          member.senderId == event.room.client.userID! &&
+          member.deviceId != event.room.client.deviceID!,
+    )) {
+      Logs().i('User has accepted the call on a different device');
+      await FlutterCallkitIncoming.endCall(params.id);
+      break;
+    }
   }
 }
